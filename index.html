@@ -19,27 +19,23 @@
         .status-badge { padding: 6px 14px; border-radius: 50px; font-weight: 700; font-size: 0.85rem; display: inline-block; }
         .bg-success-light { background-color: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
         .bg-warning-light { background-color: #fffbef; color: #b45309; border: 1px solid #fef3c7; }
-        .bg-danger-light { background-color: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; }
         
         .left-wing-box { background-color: #f8fafc; border-left: 4px solid #3b82f6; border-radius: 8px; }
         .right-wing-box { background-color: #f0fdf4; border-left: 4px solid #10b981; border-radius: 8px; }
         .stock-code { color: #64748b; font-weight: 700; }
-        .scroll-wrapper { overflow-x: auto; white-space: nowrap; padding-bottom: 10px; -webkit-overflow-scrolling: touch; }
+        .scroll-wrapper { overflow-x: auto; white-space: nowrap; padding-bottom: 10px; }
         
         .nav-pills .nav-link { color: #475569; font-weight: 600; border: 1px solid #e2e8f0; margin: 4px; background-color: #ffffff; border-radius: 50px; padding: 8px 22px; display: inline-block; transition: all 0.2s; }
         .nav-pills .nav-link.active { background-color: #0f172a !important; border-color: #0f172a !important; color: #ffffff !important; }
-        
         .sub-type-label { font-size: 0.78rem; font-weight: 700; color: #0f172a; background-color: #f1f5f9; padding: 4px 10px; border-radius: 4px; margin-top: 5px; display: inline-block; border: 1px solid #e2e8f0; }
         
         .custom-focus-badge { padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; text-align: center; display: inline-block; }
-        .badge-focus-lead { background-color: #0f172a; color: #ffffff; }
         .badge-focus-darkhorse { background-color: #2563eb; color: #ffffff; }
-        .badge-focus-warn { background-color: #dc2626; color: #ffffff; }
         .badge-focus-track { background-color: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
         
         .dictionary-card { background-color: #fffbef !important; border: 1px solid #fef3c7 !important; border-left: 6px solid #eab308 !important; border-radius: 16px; padding: 24px; margin-bottom: 35px; }
         .dictionary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 15px; }
-        .dict-item { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; box-shadow: 0 2px 6px rgba(0,0,0,0.01); }
+        .dict-item { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; }
         .dict-title { font-weight: 800; color: #1e293b; font-size: 1.05rem; margin-bottom: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; }
     </style>
 </head>
@@ -47,44 +43,39 @@
     <nav class="navbar navbar-custom py-3">
         <div class="container">
             <span class="navbar-brand">💡 彥維的 AI 兩階段價值存股大數據中心</span>
-            <span class="badge bg-light text-dark p-2 border">官方同步時間：2026-05-25 12:11</span>
+            <span class="badge bg-light text-dark p-2 border">數據完全真實對齊時間：2026-05-25 12:22</span>
         </div>
     </nav>
 
     <div class="container my-5">
         
         <div class="card dictionary-card shadow-sm">
-            <h5 class="fw-bold mb-1" style="color: #854d0e;">📖 實戰必備：AI 價值投資指標白話工具書</h5>
-            <p class="text-muted small mb-3">最頂層核心指標定義與判定邏輯詳解，幫助您快速看懂數據背後代表的真實價值：</p>
+            <h5 class="fw-bold mb-1" style="color: #854d0e;">📖 實戰指標工具書：什麼是本益比與現金殖利率？</h5>
+            <p class="text-muted small mb-3">最完整詳細的白話定義與實戰挑選標準：</p>
             <div class="dictionary-grid">
                 <div class="dict-item">
-                    <div class="dict-title" style="color: #2563eb;">📈 本益比 (PE Ratio)</div>
+                    <div class="dict-title" style="color: #2563eb;">📈 目前本益比 (PE Ratio)</div>
                     <div class="small text-secondary" style="line-height: 1.6;">
-                        <b>白話意思：</b>現在買進這檔股票，用它目前的賺錢速度，<b>預計幾年可以讓我們完全回本</b>。本益比越低，代表回本速度越快、股價越便宜！<br>
-                        <b>便宜低估判定門檻：</b><br>
-                        • 電子科技類股：低於或等於 <b>14.5 倍</b><br>
-                        • 傳統與金融股：低於或等於 <b>12.0 倍</b>
+                        <b>公式：</b>當前每股股價 除以 公司過去一年每股賺多少錢(EPS)。<br>
+                        <b>白話意思：</b>代表你現在買進這檔股票，用它目前的賺錢速度，<b>預計幾年可以讓我們完全回本</b>。本益比數字越小越便宜，代表股價越被市場低估！<br>
+                        <b>高於類股的意思：</b>如果比同行老大哥高，代表市場情緒追價過熱，有買貴或泡沫化的追高風險。<br>
+                        <b>本系統低估標準：</b>電子科技股小於或等於 14.5 倍、傳統金融股小於或等於 12.0 倍。
                     </div>
                 </div>
                 <div class="dict-item">
                     <div class="dict-title" style="color: #16a34a;">💰 現金殖利率 (Yield)</div>
                     <div class="small text-secondary" style="line-height: 1.6;">
-                        <b>白話意思：</b>把買這檔股票當成銀行定存，<b>公司每年實際發給我們的利息回饋比率</b>。<br>
-                        • 當前官方公告實質現金殖利率大於或等於 <b>4.80%</b>，即符合高股息安全防禦帶。
+                        <b>公式：</b>公司發放的現金股利 除以 當前每股股價。<br>
+                        <b>白話意思：</b>把股票當成銀行定存，<b>公司每年實際發給我們的現金利息回饋比率</b>。這個數字越高，存股的防禦力就越強！<br>
+                        <b>本系統低估進場標準：</b>全台上市公司實質公告之現金殖利率大於或等於 <b>4.80%</b> 時，即符合黃金防禦安全帶。
                     </div>
                 </div>
                 <div class="dict-item">
                     <div class="dict-title" style="color: #7c3aed;">🏢 股價淨值比 (PB Ratio)</div>
                     <div class="small text-secondary" style="line-height: 1.6;">
-                        <b>白話意思：</b>代表我們<b>用公司清算資產的幾折價格買下它</b>。如果指標是 1 倍，代表我們用剛好等於公司財產的淨值買進。指標越低代表安全邊際越高！<br>
-                        • 全市場低於或等於 <b>1.25 倍</b>。越接近 1 倍代表下檔安全護城河越厚。
-                    </div>
-                </div>
-                <div class="dict-item">
-                    <div class="dict-title" style="color: #ea580c;">👑 盈餘分配率 & 產業黑馬定義</div>
-                    <div class="small text-secondary" style="line-height: 1.6;">
-                        <b>白話意思：</b>公司今年每賺 100 元，<b>實際掏出多少比例的現金與股票發給股東</b>。<br>
-                        <b>💎 產業黑馬定義：</b>估值明顯比同產業便宜，但<b>核心現金殖利率卻直接衝進全產業的前 15%</b> 的隱形配息冠軍。
+                        <b>公式：</b>當前每股股價 除以 公司每股淨資產價值。<br>
+                        <b>白話意思：</b>代表我們<b>用公司清算資產的幾折價格買下它</b>。指標越低，代表安全護城河越厚。<br>
+                        <b>本系統低估標準：</b>全市場小於或等於 1.25 倍 視為資產被低估。
                     </div>
                 </div>
             </div>
