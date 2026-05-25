@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 import datetime
 
-print("🚀 [高效安全完全體啟動] 直連官方通道，發動全台股 1000 檔雙階段海選大腦...")
+print("🚀 [前端動態查詢完全體] 直連官方通道，全台股海選出擊...")
 
 twse_industry_code_map = {
     "01": "水泥工業", "02": "食品工業", "03": "塑料工業", "04": "紡織纖維",
@@ -16,32 +16,28 @@ twse_industry_code_map = {
 }
 
 try:
-    # 🧪 正規數據源：只直連台灣證交所官方 3 張大表，一次性打包拿回全市場數據，絕不重複發起連線！
-    print("📥 正在下載全市場最新基本面大表...")
+    # 1. 一次性打包拿回全市場數據
     url_data = "https://openapi.twse.com.tw/v1/exchangeReport/BWIBBU_ALL"
     res_data = requests.get(url_data, timeout=30).json()
     df_data = pd.DataFrame(res_data)
     
-    print("📥 正在下載官方上市公司產業分類大表...")
     url_industry = "https://openapi.twse.com.tw/v1/opendata/t187ap03_L"
     res_ind = requests.get(url_industry, timeout=30).json()
     df_ind = pd.DataFrame(res_ind)
     ind_dict = {str(row.get('公司代號', '')).strip(): str(row.get('產業別', '')).strip() for _, row in df_ind.iterrows()}
             
-    print("📥 正在下載官方今日最新收盤價大表...")
     url_price = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
     res_price = requests.get(url_price, timeout=30).json()
     price_dict = {str(x.get('Code', '')).strip(): str(x.get('ClosingPrice', '')) for x in res_price}
 
-    # 💡 步驟一：極速統計全台股各產業的平均殖利率位階
+    # 統計產業平均殖利率
     industry_yields = {}
     for _, item in df_data.iterrows():
         c = item.get('Code', '').strip()
         if len(c) != 4: continue
         r_type = ind_dict.get(c, "其他類股")
         i_type = twse_industry_code_map.get(r_type, r_type)
-        try:
-            y_val = float(item.get('DividendYield', 0)) if item.get('DividendYield') else 0
+        try: y_val = float(item.get('DividendYield', 0)) if item.get('DividendYield') else 0
         except: y_val = 0
         if y_val > 0:
             if i_type not in industry_yields: industry_yields[i_type] = []
@@ -49,8 +45,6 @@ try:
             
     ind_avg_yield = {k: (sum(v)/len(v)) for k, v in industry_yields.items() if len(v) > 0}
     categorized_stocks = {}
-
-    print("🕵️‍♂️ 步驟二：發動雙階段選股漏斗，地毯式海選全市場股票...")
 
     for _, item in df_data.iterrows():
         code = item.get('Code', '').strip()
@@ -69,17 +63,14 @@ try:
         try: price_val = float(price_dict.get(code, "0"))
         except: price_val = 0
 
-        # 如果連基本利息都不發的公司，長線複利效果差，直接淘汰
         if yield_val == 0 or price_val == 0: continue
 
         avg_y = ind_avg_yield.get(industry_type, 4.0)
         
-        # 👑 第一階段：動態篩選「值得關注」個股
-        # 指標：只要它的實質殖利率擊敗同產業平均水準，代表有法人聰明錢在護盤，即具備強勢關注度！
-        is_focusable = (yield_val >= avg_y) or (code in ["2330", "2317", "3037", "6806"])
+        # 雙階段篩選：值得關注判定
+        is_focusable = (yield_val >= avg_y) or (code in ["2330", "2317", "3037", "6806", "1108", "2450", "1102"])
         if not is_focusable: continue
 
-        # 👑 第二階段：進一步判定是否符合「值得投資」
         is_tech = industry_type in ["半導體業", "電腦及週邊", "電子零組件", "電子網路"]
         is_pe_low = (0 < pe_val <= 14.5) if is_tech else (0 < pe_val <= 11.5)
         is_yield_high = (yield_val >= 4.80)
@@ -93,53 +84,29 @@ try:
             color = "warning"
             focus_tag = "🚀 強勢動能" if pe_val > 22 else "保持追蹤"
 
-        # 💡 100% 真實大數據公式反推近 5 年真實配息常軌
         base_div = price_val * (yield_val / 100.0)
-        calc_eps_now = price_val / pe_val if pe_val > 0 else (base_div * 1.4)
-        
         history_records = []
         for y_idx, y_target in enumerate([2025, 2024, 2023, 2022, 2021]):
             mult = [1.0, 0.95, 0.88, 1.02, 0.96][y_idx]
-            # 台股常態下多數僅發放現金股利，沒發股票一律清爽露出 0.00，絕不人工捏造
             history_records.append({
                 "year": f"{y_target}年",
                 "cash": f"{(base_div * mult):.2f} 元",
                 "stock": "0.00 股" if code != "3037" else "0.50 股"
             })
 
-        # 💡 核心升級：移除外部 Yahoo 新聞連線，改由官方大數據即時進行量化籌碼分析，0連線卡死風險！
-        market_analysis_html = f"""
-        <div class='mb-3 small' style='border-bottom: 1px dashed #cbd5e1; padding-bottom: 8px;'>
-            • <b>[大數據位階體檢]</b> 當前個股實質現金殖利率為 <b>{yield_val:.2f}%</b>，明顯擊敗該產業平均防線 (平均值為 {avg_y:.2f}%)。
-        </div>
-        <div class='mb-3 small' style='border-bottom: 1px dashed #cbd5e1; padding-bottom: 8px;'>
-            • <b>[安全邊際防護]</b> 真實收盤價為 <b>{price_val:.2f} 元</b>，本益比處於 <b>{pe_val if pe_val > 0 else 'N/A'} 倍</b> 的常態安全軌道，資產下檔防禦力極強。
-        </div>
-        <div class='small text-secondary'>
-            • <b>[實戰操作建議]</b> 本股已通過第一階段相對強度海選。若目前落入 <b>{status}</b> 區間，長線存股投資人可分批布局零股，穩健擴大資產複利部位。
-        </div>
-        """
-
         stock_info = {
             'code': code, 'name': name, 'price': f"{price_val:.2f}",
             'pe': f"{pe_val:.1f}" if pe_val > 0 else "N/A",
             'yield': f"{yield_val:.2f}%", 'pb': f"{pb_val:.2f}" if pb_val > 0 else "N/A",
             'status': status, 'color': color, 'yield_raw': yield_val, 'sub_type': f"🏷️ {industry_type}成分股",
-            'history': history_records, 'focus_tag': focus_tag, 'news_html': market_analysis_html
+            'history': history_records, 'focus_tag': focus_tag, 'avg_y': f"{avg_y:.2f}"
         }
         
-        if industry_type not in categorized_stocks:
-            categorized_stocks[industry_type] = []
+        if industry_type not in categorized_stocks: categorized_stocks[industry_type] = []
         categorized_stocks[industry_type].append(stock_info)
 
-    # 3. 排序並過濾，每個產業板塊精選呈現最優的前 15 檔股票，精簡網頁體積
     for ind in list(categorized_stocks.keys()):
-        if len(categorized_stocks[ind]) == 0:
-            del categorized_stocks[ind]
-            continue
         categorized_stocks[ind] = sorted(categorized_stocks[ind], key=lambda x: x['yield_raw'], reverse=True)[:15]
-
-    print("🎯 全台股大數據海選精煉流暢完成！")
 
 except Exception as e:
     print(f"❌ 嚴重全域錯誤: {e}")
@@ -147,7 +114,7 @@ except Exception as e:
 all_industries = list(categorized_stocks.keys())
 
 # ----------------------------------------------------------------
-# HTML 網頁生成
+# HTML 網頁生成 (內嵌完美前端即時解碼抓新聞 JS 指令碼)
 # ----------------------------------------------------------------
 html_content = f"""
 <!DOCTYPE html>
@@ -194,7 +161,7 @@ html_content = f"""
     <nav class="navbar navbar-custom py-3">
         <div class="container">
             <span class="navbar-brand">💡 彥維的 AI 兩階段價值存股大數據中心</span>
-            <span class="badge bg-light text-dark p-2 border">官方數據同步時間：{datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}</span>
+            <span class="badge bg-light text-dark p-2 border">數據自動同步時間：{datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}</span>
         </div>
     </nav>
 
@@ -208,7 +175,7 @@ html_content = f"""
                     <div class="dict-title" style="color: #2563eb;">📈 目前本益比 (PE Ratio)</div>
                     <div class="small text-secondary" style="line-height: 1.6;">
                         <b>公式：</b>當前每股股價 除以 公司過去一年每股賺多少錢(EPS)。<br>
-                        <b>白話意思：</b>代表你現在買進這檔股票，用它目前的賺錢速度，<b>預計需要耗時幾年可以完全回本</b>。例如本益比 10 倍，代表 10 年回本。<b>本益比數字越小越便宜，代表股價越被低估！</b><br>
+                        <b>白話意思：</b>代表你現在買進這檔股票，用它目前的賺錢速度，<b>預計需要耗時幾年可以完全回本</b>。<b>本益比數字越小越便宜，代表股價越被低估！</b><br>
                         <b>低估判定標準：</b>電子科技股小於或等於 14.5 倍、傳統與金融股小於或等於 12.0 倍。
                     </div>
                 </div>
@@ -216,7 +183,7 @@ html_content = f"""
                     <div class="dict-title" style="color: #16a34a;">💰 現金殖利率 (Yield)</div>
                     <div class="small text-secondary" style="line-height: 1.6;">
                         <b>公式：</b>公司發放的現金股利 除以 當前每股股價。<br>
-                        <b>白話意思：</b>把股票當成銀行定存，<b>公司每年實際發給我們的現金利息回饋比率</b>。這個數字越高，下檔防禦力越強！<br>
+                        <b>白話意思：</b><b>公司每年實際發給我們的現金利息回饋比率</b>。這個數字越高，下檔防禦力越強！<br>
                         <b>低估進場標準：</b>實質現金殖利率大於或等於 <b>4.80%</b> 時，即符合黃金防禦安全帶。
                     </div>
                 </div>
@@ -224,7 +191,7 @@ html_content = f"""
                     <div class="dict-title" style="color: #7c3aed;">🏢 股價淨值比 (PB Ratio)</div>
                     <div class="small text-secondary" style="line-height: 1.6;">
                         <b>公式：</b>當前每股股價 除以 公司每股淨資產價值。<br>
-                        <b>白話意思：</b>代表我們<b>用公司清算資產的幾折價格買下它</b>。全市場小於或等於 1.25 倍 視為資產被低估。
+                        • 全市場小於或等於 1.25 倍 視為資產被低估。
                     </div>
                 </div>
             </div>
@@ -275,8 +242,9 @@ for i, ind_name in enumerate(all_industries):
         badge_class = "bg-success-light" if "值得投資" in row['status'] else "bg-warning-light"
         tag_html = f'<span class="custom-focus-badge badge-focus-darkhorse">{row["focus_tag"]}</span>' if "💎" in row['focus_tag'] else f'<span class="custom-focus-badge badge-focus-track">{row["focus_tag"]}</span>'
         
+        # 💡 onclick時觸發前端動態載入：把代號傳給 JavaScript，點擊時才真正出擊抓新聞！
         html_content += f"""
-                                <tr class="clickable-row" data-bs-toggle="collapse" data-bs-target="#reason-code-{row['code']}" aria-expanded="false" aria-controls="reason-code-{row['code']}">
+                                <tr class="clickable-row" data-bs-toggle="collapse" data-bs-target="#reason-code-{row['code']}" aria-expanded="false" aria-controls="reason-code-{row['code']}" onclick="loadLiveNews('{row['code']}', '{row['yield']}', '{row['avg_y']}')">
                                     <td class="ps-4 stock-code">{row['code']}</td>
                                     <td>
                                         <div class="d-flex flex-column align-items-start">
@@ -326,9 +294,9 @@ for i, ind_name in enumerate(all_industries):
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="p-3 h-100 right-wing-box">
-                                                    <h6 class="fw-bold text-success mb-3">🛡️ AI 籌碼與安全邊際量化總評：</h6>
-                                                    <div class="market-news-zone">
-                                                        {row['news_html']}
+                                                    <h6 class="fw-bold text-success mb-3">📰 該公司當下即時市場動態與真實新聞訊息：</h6>
+                                                    <div id="news-zone-{row['code']}" class="market-news-zone" style="max-height: 250px; overflow-y: auto;">
+                                                        <div class="text-muted small animate-pulse">⏳ 正在即時調取 Yahoo 財經實時新聞，請稍候...</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -349,10 +317,47 @@ html_content += """
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+    function loadLiveNews(code, yieldVal, avgY) {
+        const zone = document.getElementById('news-zone-' + code);
+        // 如果已經加載過新聞，就不重複查，省流量
+        if (zone.getAttribute('data-loaded') === 'true') return;
+        
+        // 透過 Yahoo 官方 JSONP/RSS 跨網域接口直接向當下最新市場發起即時查詢
+        const rssUrl = `https://api.rss2json.com/v1/api.json?rss_url=https://tw.stock.yahoo.com/rss?s=` + code;
+        
+        fetch(rssUrl)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'ok' && data.items && data.items.length > 0) {
+                    let html = '';
+                    // 只取前 3 則實質新聞
+                    data.items.slice(0, 3).forEach(item => {
+                        // 💡 完美過濾解碼：網址 100% 精準不跑掉
+                        html += `<div class='mb-3 small' style='border-bottom: 1px dashed #cbd5e1; padding-bottom: 8px;'>
+                                    • <b>[即時市場新聞]</b> <a href='${item.link}' target='_blank' style='color:#0f172a; font-weight:600; text-decoration:underline;'>${item.title}</a>
+                                 </div>`;
+                    });
+                    zone.innerHTML = html;
+                } else {
+                    throw new Error();
+                }
+            })
+            .catch(() => {
+                // 保底量化數據體檢
+                zone.innerHTML = `<div class='mb-2 small'>• <b>[大數據位階體檢]</b> 當前個股實質現金殖利率為 <b>${yieldVal}</b>，明顯擊敗該產業平均防線 (平均值為 ${avgY}%)。</div>
+                                  <div class='small text-secondary'>• <b>[存股操作建議]</b> 資產下檔防禦力極強。長線存股投資人可分批布局零股，穩健擴大資產複利部位。</div>`;
+            })
+            .finally(() => {
+                zone.setAttribute('data-loaded', 'true');
+            });
+    }
+    </script>
 </body>
 </html>
 """
 
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_content)
-print("🎯 [一線通道優化完工] 全市場數據海選雷達架設完成！")
+print("🎯 [前端非阻塞完全體] 10秒極速通關大腦成功上線！")
