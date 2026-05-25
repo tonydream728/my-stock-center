@@ -2,20 +2,38 @@ import requests
 import pandas as pd
 import datetime
 
-print("🚀 啟動【台灣證交所官方 Open Data】無懈可擊全市場產業分類選股大腦...")
+print("🚀 啟動【台灣證交所官方 Open Data × AI次產業細分】終極監控大腦...")
+
+# 建立一套最精準的台灣上市核心黑馬「次產業細分類型對照表」
+# 這樣當程式抓到特定股票時，能立刻在名稱下方打上你最想看的實質類型（散熱、封裝、車用電子、通路）
+sub_industry_map = {
+    # 1. 散熱與高階冷卻組
+    "3017": "🔥 散熱模組 · 水冷系統", "3015": "🔥 散熱模組 · 高階風扇", "2421": "🔥 散熱模組 · 車用散熱", 
+    "3653": "🔥 散熱模組 · 液冷板", "3324": "🔥 散熱模組 · 導熱材料",
+    # 2. 先進封裝與 AI 半導體設備組
+    "6187": "📦 先進封裝設備 · CoWoS", "3131": "📦 半導體設備 · 濕製程", "1560": "📦 半導體設備 · 點膠機",
+    "6640": "📦 半導體設備 · 檢測檢驗", "2404": "📦 半導體建廠工程 · 潔淨室",
+    # 3. 汽車零組件與車用電子組
+    "1319": "🚗 汽車零組件 · 東陽塑膠", "6279": "🚗 汽車零組件 · 車用連接器", "2355": "🚗 車用電子 · 汽車PCB板",
+    "2231": "🚗 汽車零組件 · 高階鍛造", "5243": "🚗 車用電子 · 汽車開關", "2207": "🚗 汽車總代理 · 售後服務",
+    # 4. 電子通路與成熟常勝軍
+    "3034": "👑 電子通路 · 亞太最大", "3702": "👑 電子通路 · 半導體通路", "2347": "👑 電子通路 · 資訊整合",
+    # 5. AI 伺服器核心與載板
+    "2330": "⚡ 半導體龍頭 · 晶圓代工", "3037": "⚡ 高階IC載板 · B300長單", "2382": "⚡ AI伺服器 · 系統組裝",
+    "2317": "⚡ AI伺服器 · 鴻海家族", "6669": "⚡ AI伺服器 · ASIC客製化"
+}
 
 try:
-    # 1. 直接下載證交所今日所有上市股票的本益比、殖利率、股淨比大表
+    # 1. 下載證交所大數據
     url_data = "https://openapi.twse.com.tw/v1/exchangeReport/BWIBBU_ALL"
     res_data = requests.get(url_data, timeout=30).json()
     df_data = pd.DataFrame(res_data)
     
-    # 2. 同步下載證交所官方的「上市公司產業類股對照表」
+    # 2. 下載官方產業類股大表
     url_industry = "https://openapi.twse.com.tw/v1/opendata/t187ap03_L"
     res_ind = requests.get(url_industry, timeout=30).json()
     df_ind = pd.DataFrame(res_ind)
     
-    # 建立一個代號對應產業名稱的字典
     ind_dict = {}
     for _, row in df_ind.iterrows():
         c_code = str(row.get('公司代號', '')).strip()
@@ -23,22 +41,20 @@ try:
         if c_code and c_type:
             ind_dict[c_code] = c_type
             
-    # 3. 同步下載最新收盤價大表作為價格防禦
+    # 3. 下載最新收盤價
     url_price = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
     res_price = requests.get(url_price, timeout=30).json()
     price_dict = {str(x.get('Code', '')).strip(): str(x.get('ClosingPrice', '')) for x in res_price}
 
-    # 準備用來分類的容器
     categorized_stocks = {}
     
     for _, item in df_data.iterrows():
         code = item.get('Code', '').strip()
         name = item.get('Name', '').strip()
         
-        if len(code) != 4:  # 專注一般四碼股票，過濾權證
+        if len(code) != 4:
             continue
             
-        # 取得該股票的官方產業分類
         industry_type = ind_dict.get(code, "其他類股")
         if not industry_type or industry_type == "None" or industry_type == "":
             industry_type = "其他類股"
@@ -60,34 +76,29 @@ try:
 
         current_price = price_dict.get(code, "查看行情")
 
-        # 核心第一道漏斗：不發現金股利的直接淘汰
         if yield_val == 0:
             continue
             
-        # ----------------------------------------------------------------
-        # 第二階段：兩階段選股漏斗 (關注指標與投資指標大交叉)
-        # ----------------------------------------------------------------
+        # 💡 自動辨識次產業類型標籤，若不在核心對照表內，則自動生成基本標籤，確保絕不漏接
+        sub_type = sub_industry_map.get(code, f"🏷️ 一般{industry_type.replace('業','')}")
+            
         is_tech = industry_type in ["半導體業", "電腦及週邊設備", "電子零組件業", "通信網路業"]
-        
-        # 判定是否低估（滿足本益比低或殖利率高的價值安全邊際）
         is_pe_low = (0 < pe_val <= 14.5) if is_tech else (0 < pe_val <= 11.5)
         is_yield_high = (yield_val >= 4.8)
         is_pb_low = (pb_val <= 1.25)
         
-        # 動態情報標籤設定
         badge = "穩健存股"
         badge_color = "secondary"
         order_info = "目前營運動能穩定。該公司長年維持高透明度之接單政策，預估下半年產能利用率可維持在歷史均值以上，長線營收表現看好。"
         news_info = "利多：官方最新公告配息政策符合市場預期。受惠於板塊資金輪動，近期技術面與籌碼面流動性極佳。"
         focus_tag = "保持追蹤"
 
-        # 針對幾檔黃仁勳與強勢權值指標進行黃金字串對齊
         if code == "2330":
-            badge, badge_color, focus_tag = "NVIDIA大單", "success", "🚀 領先指標 (強於權值)"
+            badge, badge_color, focus_tag = "NVIDIA大單", "success", "🚀 領先指標(強於權值)"
             order_info = "接獲新世代 Blackwell 晶片超預期追加訂單，先進封裝（CoWoS）產能全面吃緊，下半年營收可望創歷史新高。"
             news_info = "外資出具最新報告調升目標價；供應鏈傳出晶圓代工報價將調漲 5%，未來獲利含金量極高。"
         elif code == "3037":
-            badge, badge_color, focus_tag = "載板新單", "success", "🚀 領先指標 (強於權值)"
+            badge, badge_color, focus_tag = "載板新單", "success", "🚀 領先指標(強於權值)"
             order_info = "成功拿下美系 AI 伺服器巨頭 B300 晶片高階載板長單，產能利用率從 65% 瞬間拉高至 85% 以上。"
             news_info = "日系大廠減產引發轉單效益，市場嚴重低估其在 AI 高階載板的市佔率爆發力。"
         elif code == "2317":
@@ -95,7 +106,6 @@ try:
             order_info = "最新一代 AI 機櫃與伺服器整機代工訂單全面放量，海外廠區產能全滿，訂單能見度直達 2027 年。"
             news_info = "外資法人連續數日執行波段吃貨，市場預期今年整體 EPS 有望超標，估值仍被嚴重低估。"
 
-        # 兩階段選股綜合給分系統
         if (is_pe_low and is_yield_high) or badge_color == "success":
             status = "🟢 便宜低估價"
             color = "success"
@@ -118,30 +128,24 @@ try:
             'pe': f"{pe_val:.1f}" if pe_val > 0 else "N/A",
             'yield': f"{yield_val:.2f}%", 'pb': f"{pb_val:.2f}",
             'status': status, 'color': color, 'badge': badge, 'badge_color': badge_color,
-            'order': order_info, 'news': news_info, 'focus_tag': focus_tag, 'yield_raw': yield_val
+            'order': order_info, 'news': news_info, 'focus_tag': focus_tag, 'yield_raw': yield_val,
+            'sub_type': sub_type  # 塞入次產業類型數據
         }
         
         if industry_type not in categorized_stocks:
             categorized_stocks[industry_type] = []
         categorized_stocks[industry_type].append(stock_info)
 
-    # 每個類股內的股票，依照殖利率由高到低進行大數據排序
     for ind in list(categorized_stocks.keys()):
-        # 如果該產業一檔符合的股票都沒有，就砍掉該標籤，不佔網頁空間
-        if not categorized_stocks[ind]:
+        if not categorized_stocks[ind] or len(categorized_stocks[ind]) == 0:
             del categorized_stocks[ind]
             continue
         categorized_stocks[ind] = sorted(categorized_stocks[ind], key=lambda x: x['yield_raw'], reverse=True)
 
-    print("🎯 官方全市場數據篩選與類股分類全面完成！")
-
 except Exception as e:
-    print(f"❌ 證交所連線錯誤: {e}")
-    categorized_stocks = {"系統通知": [{'code': '0000', 'name': '連線排隊中', 'price': '-', 'pe': '-', 'yield': '-', 'pb': '-', 'status': '🔴 稍後重試', 'color': 'danger', 'badge': '錯誤', 'badge_color': 'danger', 'order': '-', 'news': '-', 'focus_tag': '-'}]}
+    print(f"❌ 錯誤: {e}")
+    categorized_stocks = {"錯誤": []}
 
-# ----------------------------------------------------------------
-# HTML 網頁完全體生成
-# ----------------------------------------------------------------
 all_industries = list(categorized_stocks.keys())
 
 html_content = f"""
@@ -174,6 +178,15 @@ html_content = f"""
         .nav-pills .nav-link {{ color: #475569; font-weight: 600; border: 1px solid #e2e8f0; margin: 4px; background-color: #ffffff; border-radius: 50px; padding: 8px 22px; display: inline-block; transition: all 0.2s; }}
         .nav-pills .nav-link.active {{ background-color: #0f172a !important; border-color: #0f172a !important; color: #ffffff !important; }}
         .info-tag {{ font-size: 0.75rem; font-weight: 700; padding: 4px 8px; border-radius: 4px; margin-left: 6px; }}
+        
+        /* 次產業細分標籤特製樣式 */
+        .sub-type-label {{ font-size: 0.78rem; font-weight: 700; color: #475569; background-color: #f1f5f9; padding: 3px 10px; border-radius: 4px; margin-top: 4px; display: inline-block; border: 1px solid #e2e8f0; }}
+        
+        .custom-focus-badge {{ padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; text-align: center; display: inline-block; }}
+        .badge-focus-lead {{ background-color: #0f172a; color: #ffffff; }}
+        .badge-focus-darkhorse {{ background-color: #2563eb; color: #ffffff; }}
+        .badge-focus-warn {{ background-color: #dc2626; color: #ffffff; }}
+        .badge-focus-track {{ background-color: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }}
     </style>
 </head>
 <body>
@@ -227,7 +240,7 @@ for i, ind_name in enumerate(all_industries):
                                     <th>當前股價</th>
                                     <th>目前本益比</th>
                                     <th>現金殖利率</th>
-                                    <th class="pe-4">動能與價值定位 (點擊看詳情)</th>
+                                    <th class="pe-4">動能與價值定位</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -235,21 +248,34 @@ for i, ind_name in enumerate(all_industries):
     
     for s_idx, row in enumerate(categorized_stocks[ind_name]):
         badge_class = "bg-success-light" if "🟢" in row['status'] else ("bg-warning-light" if "🟡" in row['status'] else "bg-danger-light")
-        focus_tag_class = "badge bg-dark text-white" if "🚀" in row['focus_tag'] else ("badge bg-primary text-white" if "💎" in row['focus_tag'] else "badge bg-light text-secondary border")
+        
+        if "🚀" in row['focus_tag']:
+            tag_html = f'<span class="custom-focus-badge badge-focus-lead">{row["focus_tag"]}</span>'
+        elif "💎" in row['focus_tag']:
+            tag_html = f'<span class="custom-focus-badge badge-focus-darkhorse">{row["focus_tag"]}</span>'
+        elif "⚠️" in row['focus_tag']:
+            tag_html = f'<span class="custom-focus-badge badge-focus-warn">{row["focus_tag"]}</span>'
+        else:
+            tag_html = f'<span class="custom-focus-badge badge-focus-track">{row["focus_tag"]}</span>'
         
         html_content += f"""
                                 <tr data-bs-toggle="collapse" data-bs-target="#reason-{i}-{s_idx}" style="cursor: pointer;">
                                     <td class="ps-4 stock-code">{row['code']}</td>
                                     <td>
-                                        <span class="fw-semibold text-dark">{row['name']}</span>
-                                        <span class="badge bg-{row['badge_color']} info-tag">{row['badge']}</span>
+                                        <div class="d-flex flex-column align-items-start">
+                                            <div>
+                                                <span class="fw-semibold text-dark" style="font-size: 1.05rem;">{row['name']}</span>
+                                                <span class="badge bg-{row['badge_color']} info-tag">{row['badge']}</span>
+                                            </div>
+                                            <span class="sub-type-label">{row['sub_type']}</span>
+                                        </div>
                                     </td>
                                     <td><span class="fw-bold text-dark">{row['price']} 元</span></td>
                                     <td>{row['pe']} 倍</td>
                                     <td class="text-success fw-bold">{row['yield']}</td>
                                     <td class="pe-4">
                                         <span class="status-badge {badge_class} me-2">{row['status']}</span>
-                                        <span class="{focus_tag_class}">{row['focus_tag']}</span>
+                                        {tag_html}
                                     </td>
                                 </tr>
                                 <tr id="reason-{i}-{s_idx}" class="collapse">
@@ -330,4 +356,4 @@ html_content += """
 
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_content)
-print("🎯 雙階段聯防·全市場直連證交所完全體大腦已成功生成完畢！")
+print("🎯 帶有【次產業實質細分標籤】的完全體大腦已成功部署！")
