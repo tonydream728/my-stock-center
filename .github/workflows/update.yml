@@ -20,7 +20,7 @@ jobs:
 
     - name: 安裝大數據所需套件
       run: |
-        pip install requests pandas
+        pip install requests pandas yfinance
 
     - name: 執行 AI 籌碼與價值驗證
       env:
