@@ -4,448 +4,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的不看盤價值投資中心</title>
+    <title>全台上市股票·AI價值投資存股中心</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f7f9fa; color: #333333; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "微軟正黑體", sans-serif; }
-        .navbar-custom { background-color: #ffffff; border-bottom: 1px solid #eef2f5; }
-        .navbar-brand { font-weight: 700; color: #1e293b !important; }
-        .card-custom { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        body { background-color: #f8fafc; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "微軟正黑體", sans-serif; }
+        .navbar-custom { background-color: #ffffff; border-bottom: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .navbar-brand { font-weight: 800; color: #0f172a !important; font-size: 1.35rem; }
+        .card-custom { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 12px rgba(15,23,42,0.01); }
         .table-custom { background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; }
-        .status-badge { padding: 6px 14px; border-radius: 50px; font-weight: 600; font-size: 0.85rem; display: inline-block; }
-        .bg-success-light { background-color: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
-        .bg-warning-light { background-color: #fffbef; color: #92400e; border: 1px solid #fef3c7; }
+        .status-badge { padding: 6px 14px; border-radius: 50px; font-weight: 700; font-size: 0.85rem; display: inline-block; }
+        .bg-success-light { background-color: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+        .bg-warning-light { background-color: #fffbef; color: #b45309; border: 1px solid #fef3c7; }
         .bg-danger-light { background-color: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; }
-        .analysis-box { background-color: #f8fafc; border-left: 4px solid #3b82f6; border-radius: 0 8px 8px 0; }
+        
+        .left-wing-box { background-color: #f8fafc; border-left: 4px solid #3b82f6; border-radius: 8px; }
+        .right-wing-box { background-color: #f0fdf4; border-left: 4px solid #10b981; border-radius: 8px; }
+        .stock-code { color: #64748b; font-weight: 700; }
+        
+        .scroll-wrapper { overflow-x: auto; white-space: nowrap; padding-bottom: 10px; }
+        .nav-pills .nav-link { color: #475569; font-weight: 600; border: 1px solid #e2e8f0; margin: 4px; background-color: #ffffff; border-radius: 50px; padding: 8px 22px; display: inline-block; }
+        .nav-pills .nav-link.active { background-color: #0f172a !important; border-color: #0f172a !important; color: #ffffff !important; }
+        .info-tag { font-size: 0.75rem; font-weight: 700; padding: 4px 8px; border-radius: 4px; margin-left: 6px; }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-custom py-3">
         <div class="container">
-            <span class="navbar-brand">💡 我的不看盤價值投資中心</span>
-            <span class="badge bg-light text-dark p-2 border">最後更新：2026-05-25 18:17 (台北時間)</span>
+            <span class="navbar-brand">💡 彥維的 AI 兩階段價值存股大數據中心</span>
+            <span class="badge bg-light text-dark p-2 border">數據更新時間：2026-05-25 10:50 (台北時間)</span>
         </div>
     </nav>
 
     <div class="container my-5">
         <div class="card card-custom p-4 mb-5" style="background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); border-left: 6px solid #10b981;">
-            <h5 class="fw-bold text-success mb-2">巴菲特長線存股心法 🎯</h5>
-            <p class="mb-0 text-secondary" style="font-size: 0.95rem; line-height: 1.6;">「如果你不想持有這隻股票十年，那你就連十分鐘也不要持有。」我們透過大數據視角看穿外資動向，在好公司股價被打折時，優雅地累積零股，賺取長線豐厚股利。</p>
+            <h5 class="fw-bold text-success mb-2">第一階段：值得關注（動能/強勢）➔ 第二階段：值得投資（安全邊際）🎯</h5>
+            <p class="mb-0 text-secondary" style="font-size: 0.95rem; line-height: 1.65;">
+                本系統數據直連<b>台灣證交所官方開放資料庫</b>。請點選下方橫向導覽列切換產業板塊，點擊個股列可展開看【左翼：三大估值指標與10年股利表】、【右翼：AI 訂單與未來動能情報】。
+            </p>
         </div>
 
-        <div class="card card-custom p-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold m-0 text-dark">🚀 黃仁勳核心供應鏈 — 23 檔動態體檢表</h5>
-                <span class="text-muted small">💡 提示：點擊股票即可展開看外資策略分析</span>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-custom table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="ps-4">代號</th>
-                            <th>公司名稱</th>
-                            <th>當前股價 (元)</th>
-                            <th>目前本益比</th>
-                            <th>現金殖利率</th>
-                            <th class="pe-4">投資策略建議 (點擊看原因)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+        <div class="mb-4">
+            <h6 class="fw-bold mb-3 text-secondary">🔍 點選觀察產業板塊：</h6>
+            <div class="scroll-wrapper">
+                <div class="nav nav-pills" id="v-pills-tab" role="tablist" style="display: inline-flex;">
 
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-0" style="cursor: pointer;">
-                            <td class="ps-4"><b>3037</b></td>
-                            <td><span class="fw-semibold text-dark">欣興</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">990.0</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-0" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-1" style="cursor: pointer;">
-                            <td class="ps-4"><b>2308</b></td>
-                            <td><span class="fw-semibold text-dark">台達電</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">2290.0</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-1" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-2" style="cursor: pointer;">
-                            <td class="ps-4"><b>5289</b></td>
-                            <td><span class="fw-semibold text-dark">宜鼎</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">1685.0</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-2" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-3" style="cursor: pointer;">
-                            <td class="ps-4"><b>2454</b></td>
-                            <td><span class="fw-semibold text-dark">聯發科</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">4245.0</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-3" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-4" style="cursor: pointer;">
-                            <td class="ps-4"><b>2330</b></td>
-                            <td><span class="fw-semibold text-dark">台積電</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">2310.0</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-4" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-5" style="cursor: pointer;">
-                            <td class="ps-4"><b>2449</b></td>
-                            <td><span class="fw-semibold text-dark">京元電</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">317.0</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-5" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-6" style="cursor: pointer;">
-                            <td class="ps-4"><b>2345</b></td>
-                            <td><span class="fw-semibold text-dark">智邦</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">2540.0</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-6" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-7" style="cursor: pointer;">
-                            <td class="ps-4"><b>6669</b></td>
-                            <td><span class="fw-semibold text-dark">緯穎</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">5610.0</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-7" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-8" style="cursor: pointer;">
-                            <td class="ps-4"><b>2301</b></td>
-                            <td><span class="fw-semibold text-dark">光寶科</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">227.5</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-8" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-9" style="cursor: pointer;">
-                            <td class="ps-4"><b>3017</b></td>
-                            <td><span class="fw-semibold text-dark">奇鋐</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">2575.0</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-9" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-10" style="cursor: pointer;">
-                            <td class="ps-4"><b>2317</b></td>
-                            <td><span class="fw-semibold text-dark">鴻海</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">261.0</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-10" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-11" style="cursor: pointer;">
-                            <td class="ps-4"><b>2395</b></td>
-                            <td><span class="fw-semibold text-dark">研華</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">498.5</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-11" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-12" style="cursor: pointer;">
-                            <td class="ps-4"><b>2357</b></td>
-                            <td><span class="fw-semibold text-dark">華碩</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">709.0</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-12" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-13" style="cursor: pointer;">
-                            <td class="ps-4"><b>2376</b></td>
-                            <td><span class="fw-semibold text-dark">技嘉</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">336.5</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-13" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-14" style="cursor: pointer;">
-                            <td class="ps-4"><b>3231</b></td>
-                            <td><span class="fw-semibold text-dark">緯創</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">149.0</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-14" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-15" style="cursor: pointer;">
-                            <td class="ps-4"><b>2324</b></td>
-                            <td><span class="fw-semibold text-dark">仁寶</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">34.65</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-15" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-16" style="cursor: pointer;">
-                            <td class="ps-4"><b>2382</b></td>
-                            <td><span class="fw-semibold text-dark">廣達</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">316.5</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-16" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-17" style="cursor: pointer;">
-                            <td class="ps-4"><b>2356</b></td>
-                            <td><span class="fw-semibold text-dark">英業達</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">65.4</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-17" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-18" style="cursor: pointer;">
-                            <td class="ps-4"><b>3515</b></td>
-                            <td><span class="fw-semibold text-dark">華擎</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">245.0</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-18" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-19" style="cursor: pointer;">
-                            <td class="ps-4"><b>2353</b></td>
-                            <td><span class="fw-semibold text-dark">宏碁</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">32.5</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-19" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-20" style="cursor: pointer;">
-                            <td class="ps-4"><b>4938</b></td>
-                            <td><span class="fw-semibold text-dark">和碩</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">81.2</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-20" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-21" style="cursor: pointer;">
-                            <td class="ps-4"><b>2377</b></td>
-                            <td><span class="fw-semibold text-dark">微星</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">127.0</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-21" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                        <tr data-bs-toggle="collapse" data-bs-target="#reason-22" style="cursor: pointer;">
-                            <td class="ps-4"><b>6125</b></td>
-                            <td><span class="fw-semibold text-dark">廣運</span></td>
-                            <td><span class="badge bg-light text-dark border p-2">65.4</span></td>
-                            <td>N/A</td>
-                            <td class="text-success fw-bold">N/A</td>
-                            <td class="pe-4"><span class="status-badge bg-danger-light">🔴 昂貴價 (市場情緒過熱，不建議追高)</span></td>
-                        </tr>
-                        <tr id="reason-22" class="collapse">
-                            <td colspan="6" class="p-0">
-                                <div class="p-4 mx-4 my-2 analysis-box shadow-sm">
-                                    <h6 class="fw-bold text-primary mb-2">🔍 籌碼面背景原因深度解析：</h6>
-                                    <p class="text-dark mb-0" style="font-size: 0.92rem; line-height: 1.65;">【外資與籌碼背景解密】目前市場預期過度樂觀，推升本益比至 N/A 倍的高位階，現金殖利率被稀釋至 0.00%。不符合巴菲特看重實質現金流與安全邊際的標準。策略上應保持耐心、暫時觀望，將零股資金留存，靜待非理性修正帶來的打折機會。</p>
-                                </div>
-                            </td>
-                        </tr>
-    
-                    </tbody>
-                </table>
+                </div>
             </div>
+        </div>
+
+        <div class="tab-content" id="v-pills-tabContent">
+
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
