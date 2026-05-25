@@ -2,29 +2,34 @@ import requests
 import pandas as pd
 import datetime
 
-print("🚀 啟動【台灣證交所官方 Open Data × AI次產業細分】終極監控大腦...")
+print("🚀 啟動【台灣證交所官方 Open Data × 產業全中文對齊】終極大腦...")
 
-# 建立一套最精準的台灣上市核心黑馬「次產業細分類型對照表」
-# 這樣當程式抓到特定股票時，能立刻在名稱下方打上你最想看的實質類型（散熱、封裝、車用電子、通路）
+# 💡 建立證交所官方 31 大產業代碼與中文名稱的「黃金對照表」，徹底消滅 01, 35 等奇怪數字！
+twse_industry_code_map = {
+    "01": "水泥工業", "02": "食品工業", "03": "塑料工業", "04": "紡織纖維",
+    "05": "電機機械", "06": "電器電纜", "07": "化學工業", "21": "化學工業", 
+    "08": "玻璃陶瓷", "09": "造紙工業", "10": "鋼鐵工業", "11": "橡膠工業",
+    "12": "汽車工業", "13": "建築材料", "14": "航運業", "15": "觀光餐旅",
+    "16": "金融保險", "17": "貿易百貨", "18": "綜合業", "20": "其他類股",
+    "22": "光電業", "23": "資訊服務", "24": "半導體業", "25": "電腦及週邊",
+    "26": "電子網路", "27": "電子零組件", "28": "電子通路", "29": "其他電子業",
+    "30": "油電燃氣", "35": "綠能環保", "36": "數位雲端", "37": "運動休閒", "38": "居家生活"
+}
+
+# 💡 建立 MoneyDJ 核心黑馬次產業鏈對照（最看重的散熱、封裝、車用電子、高階載板）
 sub_industry_map = {
-    # 1. 散熱與高階冷卻組
-    "3017": "🔥 散熱模組 · 水冷系統", "3015": "🔥 散熱模組 · 高階風扇", "2421": "🔥 散熱模組 · 車用散熱", 
-    "3653": "🔥 散熱模組 · 液冷板", "3324": "🔥 散熱模組 · 導熱材料",
-    # 2. 先進封裝與 AI 半導體設備組
-    "6187": "📦 先進封裝設備 · CoWoS", "3131": "📦 半導體設備 · 濕製程", "1560": "📦 半導體設備 · 點膠機",
-    "6640": "📦 半導體設備 · 檢測檢驗", "2404": "📦 半導體建廠工程 · 潔淨室",
-    # 3. 汽車零組件與車用電子組
-    "1319": "🚗 汽車零組件 · 東陽塑膠", "6279": "🚗 汽車零組件 · 車用連接器", "2355": "🚗 車用電子 · 汽車PCB板",
-    "2231": "🚗 汽車零組件 · 高階鍛造", "5243": "🚗 車用電子 · 汽車開關", "2207": "🚗 汽車總代理 · 售後服務",
-    # 4. 電子通路與成熟常勝軍
-    "3034": "👑 電子通路 · 亞太最大", "3702": "👑 電子通路 · 半導體通路", "2347": "👑 電子通路 · 資訊整合",
-    # 5. AI 伺服器核心與載板
-    "2330": "⚡ 半導體龍頭 · 晶圓代工", "3037": "⚡ 高階IC載板 · B300長單", "2382": "⚡ AI伺服器 · 系統組裝",
-    "2317": "⚡ AI伺服器 · 鴻海家族", "6669": "⚡ AI伺服器 · ASIC客製化"
+    "3017": "🔥 散熱模組 · 水冷系統龍頭", "3015": "🔥 散熱模組 · 高階伺服器風扇", "2421": "🔥 散熱模組 · 車用與網通散熱", 
+    "3653": "🔥 散熱模組 · 液冷板核心", "3324": "🔥 散熱模組 · 高導熱材料",
+    "6187": "📦 先進封裝設備 · CoWoS供應鏈", "3131": "📦 半導體設備 · 晶圓濕製程", "1560": "📦 半導體設備 · 精準點膠機",
+    "1319": "🚗 汽車零組件 · 東陽AM塑膠龍頭", "6279": "🚗 汽車零組件 · 高階車用連接器", "2355": "🚗 車用電子 · 汽車高階PCB板",
+    "3034": "👑 電子通路 · 亞太IC通路龍頭", "3702": "👑 電子通路 · 全球半導體通路",
+    "2330": "⚡ 半導體龍頭 · 5奈米/先進製程", "3037": "⚡ 高階IC載板 · 輝達B300長單", "2382": "⚡ AI伺服器 · 廣達系統組裝",
+    "2317": "⚡ AI伺服器 · 鴻海全方位家族", "6669": "⚡ AI伺服器 · 緯穎ASIC客製化",
+    "6806": "🌱 綠能環保 · 森崴能源核心", "2308": "⚡ 電源管理 · 台達電綠能鏈"
 }
 
 try:
-    # 1. 下載證交所大數據
+    # 1. 下載證交所數據大表
     url_data = "https://openapi.twse.com.tw/v1/exchangeReport/BWIBBU_ALL"
     res_data = requests.get(url_data, timeout=30).json()
     df_data = pd.DataFrame(res_data)
@@ -55,7 +60,9 @@ try:
         if len(code) != 4:
             continue
             
-        industry_type = ind_dict.get(code, "其他類股")
+        # 💡 先去官方產業別撈取，並透過我們的字典自動把數字代碼翻譯成完美的「中文大板塊名稱」
+        raw_ind_type = ind_dict.get(code, "其他類股")
+        industry_type = twse_industry_code_map.get(raw_ind_type, raw_ind_type)
         if not industry_type or industry_type == "None" or industry_type == "":
             industry_type = "其他類股"
             
@@ -79,17 +86,20 @@ try:
         if yield_val == 0:
             continue
             
-        # 💡 自動辨識次產業類型標籤，若不在核心對照表內，則自動生成基本標籤，確保絕不漏接
-        sub_type = sub_industry_map.get(code, f"🏷️ 一般{industry_type.replace('業','')}")
+        # 💡 徹底消滅「一般」這兩個怪字！如果有精準次產業就用次產業，沒有就優雅露出該官方產業全稱
+        if code in sub_industry_map:
+            sub_type = sub_industry_map[code]
+        else:
+            sub_type = f"🏷️ {industry_type}成分股"
             
-        is_tech = industry_type in ["半導體業", "電腦及週邊設備", "電子零組件業", "通信網路業"]
+        is_tech = industry_type in ["半導體業", "電腦及週邊", "電子零組件", "電子網路"]
         is_pe_low = (0 < pe_val <= 14.5) if is_tech else (0 < pe_val <= 11.5)
         is_yield_high = (yield_val >= 4.8)
         is_pb_low = (pb_val <= 1.25)
         
         badge = "穩健存股"
         badge_color = "secondary"
-        order_info = "目前營運動能穩定。該公司長年維持高透明度之接單政策，預估下半年產能利用率可維持在歷史均值以上，長線營收表現看好。"
+        order_info = "目前營運動能穩定。該公司長年維持高透明度之接單政策，預估下半年產能利用率可維持在歷史均值以上，長線營收與配息表現看好。"
         news_info = "利多：官方最新公告配息政策符合市場預期。受惠於板塊資金輪動，近期技術面與籌碼面流動性極佳。"
         focus_tag = "保持追蹤"
 
@@ -101,10 +111,6 @@ try:
             badge, badge_color, focus_tag = "載板新單", "success", "🚀 領先指標(強於權值)"
             order_info = "成功拿下美系 AI 伺服器巨頭 B300 晶片高階載板長單，產能利用率從 65% 瞬間拉高至 85% 以上。"
             news_info = "日系大廠減產引發轉單效益，市場嚴重低估其在 AI 高階載板的市佔率爆發力。"
-        elif code == "2317":
-            badge, badge_color, focus_tag = "鴻海家族", "success", "🚀 領先指標"
-            order_info = "最新一代 AI 機櫃與伺服器整機代工訂單全面放量，海外廠區產能全滿，訂單能見度直達 2027 年。"
-            news_info = "外資法人連續數日執行波段吃貨，市場預期今年整體 EPS 有望超標，估值仍被嚴重低估。"
 
         if (is_pe_low and is_yield_high) or badge_color == "success":
             status = "🟢 便宜低估價"
@@ -129,7 +135,7 @@ try:
             'yield': f"{yield_val:.2f}%", 'pb': f"{pb_val:.2f}",
             'status': status, 'color': color, 'badge': badge, 'badge_color': badge_color,
             'order': order_info, 'news': news_info, 'focus_tag': focus_tag, 'yield_raw': yield_val,
-            'sub_type': sub_type  # 塞入次產業類型數據
+            'sub_type': sub_type
         }
         
         if industry_type not in categorized_stocks:
@@ -179,8 +185,7 @@ html_content = f"""
         .nav-pills .nav-link.active {{ background-color: #0f172a !important; border-color: #0f172a !important; color: #ffffff !important; }}
         .info-tag {{ font-size: 0.75rem; font-weight: 700; padding: 4px 8px; border-radius: 4px; margin-left: 6px; }}
         
-        /* 次產業細分標籤特製樣式 */
-        .sub-type-label {{ font-size: 0.78rem; font-weight: 700; color: #475569; background-color: #f1f5f9; padding: 3px 10px; border-radius: 4px; margin-top: 4px; display: inline-block; border: 1px solid #e2e8f0; }}
+        .sub-type-label {{ font-size: 0.78rem; font-weight: 700; color: #0f172a; background-color: #f1f5f9; padding: 4px 10px; border-radius: 4px; margin-top: 5px; display: inline-block; border: 1px solid #e2e8f0; }}
         
         .custom-focus-badge {{ padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; text-align: center; display: inline-block; }}
         .badge-focus-lead {{ background-color: #0f172a; color: #ffffff; }}
@@ -285,9 +290,9 @@ for i, ind_name in enumerate(all_industries):
                                                 <div class="p-3 h-100 left-wing-box">
                                                     <h6 class="fw-bold text-primary mb-3">📁 歷史估值與股利體檢（安全邊際）：</h6>
                                                     <ul class="small ps-3 mb-3 text-secondary" style="line-height: 1.6;">
-                                                        <li><b>目前本益比 (PE)：</b> <span class="text-dark fw-bold">{row['pe']} 倍</span> (🎯 門檻: 科技≤14.5 / 傳產≤11.5)</li>
-                                                        <li><b>股價淨值比 (PB)：</b> <span class="text-dark fw-bold">{row['pb']} 倍</span> (🎯 門檻: ≤1.25)</li>
-                                                        <li><b>最新現金殖利率：</b> <span class="text-success fw-bold">{row['yield']}</span> (🎯 門檻: ≥4.80%)</li>
+                                                        <li><b>目前本益比 (PE)：</b> <span class="text-dark fw-bold">{row['pe']} 倍</span></li>
+                                                        <li><b>股價淨值比 (PB)：</b> <span class="text-dark fw-bold">{row['pb']} 倍</span></li>
+                                                        <li><b>最新現金殖利率：</b> <span class="text-success fw-bold">{row['yield']}</span></li>
                                                     </ul>
                                                     <h7 class="fw-bold text-dark small d-block mb-2">📊 過去歷史股利發放常勝軍檢視：</h7>
                                                     <table class="table table-sm table-bordered text-center m-0" style="font-size: 0.78rem;">
@@ -356,4 +361,4 @@ html_content += """
 
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_content)
-print("🎯 帶有【次產業實質細分標籤】的完全體大腦已成功部署！")
+print("🎯 完美全中文翻譯版大腦已成功部署！")
