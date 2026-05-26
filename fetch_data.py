@@ -1,10 +1,11 @@
 import requests
 import pandas as pd
 import datetime
+import glob
+import json
 
-print("🚀 [產業代碼精準校正版] 啟動！導正中華電通信網路業標籤...")
+print("🚀 [15份觀測站 CSV 真理直驅終極完全體] 啟動！全面封殺任何人工預估與公式填補...")
 
-# 💡 權威校正：對齊證交所官方 100% 正確的產業別代碼名稱
 twse_industry_code_map = {
     "01": "水泥工業", "02": "食品工業", "03": "塑料工業", "04": "紡織纖維",
     "05": "電機機械", "06": "電器電纜", "07": "化學工業", "21": "化學工業", 
@@ -12,17 +13,9 @@ twse_industry_code_map = {
     "12": "汽車工業", "13": "建築材料", "14": "航運業", "15": "觀光餐旅",
     "16": "金融保險", "17": "貿易百貨", "18": "綜合業", "20": "其他類股",
     "22": "光電業", "23": "資訊服務", 
-    "24": "半導體業", "25": "電腦及週邊", "26": "通信網路業", # 💡 這裡精準修正：26是通信網路業，不是電子網路！
+    "24": "半導體業", "25": "電腦及週邊", "26": "通信網路業",
     "27": "電子零組件", "28": "電子通路", "29": "其他電子業",
     "30": "油電燃氣", "35": "綠能環保", "36": "數位雲端", "37": "運動休閒", "38": "居家生活"
-}
-
-REAL_HISTORY_MAP = {
-    "2368": [{"year": "113年度", "cash": "3.50 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "3.50 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "3.50 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "2.20 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "1.00 元", "stock": "0.00 股"}],
-    "3037": [{"year": "113年度", "cash": "3.00 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "4.60 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "8.00 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "3.40 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "1.40 元", "stock": "0.00 股"}],
-    "1108": [{"year": "113年度", "cash": "0.75 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "1.00 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "0.80 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "0.60 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "0.50 元", "stock": "0.00 股"}],
-    "1102": [{"year": "113年度", "cash": "2.10 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "2.30 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "2.10 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "3.40 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "3.55 元", "stock": "0.00 股"}],
-    "2330": [{"year": "113年度", "cash": "13.00 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "11.25 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "11.00 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "10.00 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "10.00 元", "stock": "0.00 股"}]
 }
 
 SUPPLY_CHAIN_MAP = {
@@ -46,7 +39,91 @@ SUPPLY_CHAIN_MAP = {
     "2308": "⚡ AI基建 · 台達電子 (全球 AI 高功率專用電源管理)"
 }
 
+# 💡 建立全自動化 15 份 CSV 除權息大數據庫
+csv_dividend_database = {}
+csv_files = glob.glob("t05st09_new_*.csv")
+print(f"📂 正在地毯式解析目錄下全數 {len(csv_files)} 份公開資訊觀測站真理 CSV 檔案...")
+
+raw_group_dict = {}
+
+for f_path in csv_files:
+    try:
+        # 動態尋找內嵌標頭行
+        with open(f_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        h_idx = -1
+        for idx, line in enumerate(lines):
+            if "公司代號名稱" in line:
+                h_idx = idx
+                break
+        if h_idx == -1: continue
+        
+        tmp_df = pd.read_csv(f_path, skiprows=h_idx, on_bad_lines='skip')
+        tmp_df = tmp_df.dropna(subset=['公司代號名稱', '股利所屬年(季)度'])
+        tmp_df = tmp_df[tmp_df['公司代號名稱'] != '公司代號名稱']
+        
+        # 捕捉所有潛在的現金與配股欄位，防止少算任何公積項目
+        c_cols = [c for c in tmp_df.columns if '現金股利' in c or '公積發放之現金' in c or '資本公積發放之現金' in c]
+        s_cols = [s for s in tmp_df.columns if '盈餘轉增資配股' in s or '公積轉增資配股' in s or '資本公積轉增資配股' in s]
+        
+        for _, row in tmp_df.iterrows():
+            comp_str = str(row['公司代號名稱']).strip()
+            if ' - ' in comp_str:
+                c_code = comp_str.split(' - ')[0].strip()
+            else: continue
+            
+            # 從「113年 年度」或「112年 第2季」中提煉出主年份數字 (如 113、112)
+            raw_yr = str(row['股利所屬年(季)度']).strip()
+            if '年' in raw_yr:
+                yr_num = raw_yr.split('年')[0].strip()
+            else: continue
+            
+            # 計算該列的現金分派金額
+            c_val = 0.0
+            for col in c_cols:
+                try:
+                    v = float(row[col])
+                    if pd.notna(v): c_val += v
+                except: pass
+                
+            # 計算該列的股票分派股數
+            s_val = 0.0
+            for col in s_cols:
+                try:
+                    v = float(row[col])
+                    if pd.notna(v): s_val += v
+                except: pass
+                
+            # 💡 以 (股票代號, 民國年度) 作為唯一 Key 進行跨季度、跨公積項目的實質完美累加
+            key = (c_code, yr_num)
+            if key not in raw_group_dict:
+                raw_group_dict[key] = {"cash": 0.0, "stock": 0.0}
+            raw_group_dict[key]["cash"] += c_val
+            raw_group_dict[key]["stock"] += s_val
+            
+    except Exception as e:
+        print(f"⚠️ 讀取 {f_path} 時發生非致命跳過: {e}")
+
+# 將累加完畢的各股年度數據灌入資料庫字典中
+for (c_code, yr_num), val in raw_group_dict.items():
+    if c_code not in csv_dividend_database:
+        csv_dividend_database[c_code] = []
+    
+    csv_dividend_database[c_code].append({
+        "year": f"{yr_num}年度",
+        "cash": f"{val['cash']:.2f} 元",
+        "stock": f"{val['stock']:.2f} 股",
+        "yr_int": int(yr_num)
+    })
+
+# 💡 最高指導原則：依據年度從新到舊嚴格排序，只露出最新 5 個年度。絕不添加任何一滴模擬填補！
+for c_code in csv_dividend_database:
+    csv_dividend_database[c_code] = sorted(csv_dividend_database[c_code], key=lambda x: x['yr_int'], reverse=True)[:5]
+    for item in csv_dividend_database[c_code]:
+        if "yr_int" in item: del item["yr_int"]
+
 try:
+    # 直連證交所 Open API 行情大表
     url_data = "https://openapi.twse.com.tw/v1/exchangeReport/BWIBBU_ALL"
     res_data = requests.get(url_data, timeout=30).json()
     df_data = pd.DataFrame(res_data)
@@ -60,6 +137,7 @@ try:
     res_price = requests.get(url_price, timeout=30).json()
     price_dict = {str(x.get('Code', '')).strip(): str(x.get('ClosingPrice', '')) for x in res_price}
 
+    # 統計同業平均殖利率
     industry_yields = {}
     for _, item in df_data.iterrows():
         code = item.get('Code', '').strip()
@@ -85,6 +163,9 @@ try:
         raw_ind_type = ind_dict.get(code, "其他類股")
         industry_type = twse_industry_code_map.get(raw_ind_type, raw_ind_type)
         
+        if code == "3712":
+            industry_type = "綠能環保"
+
         try: pe_val = float(item.get('PEratio', 0)) if item.get('PEratio') else 0
         except: pe_val = 0
         try: yield_val = float(item.get('DividendYield', 0)) if item.get('DividendYield') else 0
@@ -95,11 +176,12 @@ try:
         except: price_val = 0
 
         if yield_val == 0 or price_val == 0: continue
+        if yield_val > 14.0 and code not in SUPPLY_CHAIN_MAP: continue
 
         avg_y = ind_avg_yield.get(industry_type, 4.0)
         
         is_in_supply_chain = code in SUPPLY_CHAIN_MAP
-        is_focusable = (yield_val >= avg_y) or is_in_supply_chain or (code in ["1108", "2450", "1102"])
+        is_focusable = (yield_val >= avg_y) or is_in_supply_chain or (code in ["1108", "2450", "1102", "3712"])
         if not is_focusable: continue
 
         is_tech = industry_type in ["半導體業", "電腦及週邊", "電子零組件", "通信網路業"]
@@ -113,7 +195,7 @@ try:
             sub_type = SUPPLY_CHAIN_MAP[code]
         else:
             sub_type = f"🏷️ {industry_type}成分股"
-            if is_pe_low or is_yield_high:
+            if is_pe_low and is_yield_high:
                 status = "🟢 值得投資 (便宜低估)"
                 color = "success"
                 focus_tag = "💎 產業黑馬" if yield_val > (avg_y * 1.2) else "安全配置"
@@ -122,35 +204,22 @@ try:
                 color = "warning"
                 focus_tag = "保持追蹤"
 
-        if code in REAL_HISTORY_MAP:
-            history_records = REAL_HISTORY_MAP[code]
-        else:
-            actual_current_cash = price_val * (yield_val / 100.0)
-            history_records = [
-                {"year": "113年度", "cash": f"{actual_current_cash:.2f} 元", "stock": "0.00 股"},
-                {"year": "112年度", "cash": f"{actual_current_cash:.2f} 元" if yield_val > 5 else "0.00 元", "stock": "0.00 股"},
-                {"year": "111年度", "cash": "載入中", "stock": "0.00 股"},
-                {"year": "110年度", "cash": "載入中", "stock": "0.00 股"},
-                {"year": "109年度", "cash": "載入中", "stock": "0.00 股"}
-            ]
-
         stock_info = {
             'code': code, 'name': name, 'price': f"{price_val:.2f}",
             'pe': f"{pe_val:.1f}" if pe_val > 0 else "N/A",
             'yield': f"{yield_val:.2f}%", 'pb': f"{pb_val:.2f}" if pb_val > 0 else "N/A",
             'status': status, 'color': color, 'yield_raw': yield_val, 'sub_type': sub_type,
-            'history': history_records, 'focus_tag': focus_tag, 'avg_y': f"{avg_y:.2f}"
+            'focus_tag': focus_tag, 'avg_y': f"{avg_y:.2f}"
         }
         
         if is_in_supply_chain:
             supply_chain_pool.append(stock_info)
-        
-        if not is_in_supply_chain:
+        else:
             if industry_type not in categorized_stocks: categorized_stocks[industry_type] = []
             categorized_stocks[industry_type].append(stock_info)
 
     for ind in list(categorized_stocks.keys()):
-        heroes = [x for x in categorized_stocks[ind] if x['code'] in ["1108", "2450", "1102"]]
+        heroes = [x for x in categorized_stocks[ind] if x['code'] in ["1108", "2450", "1102", "3712"]]
         normals = [x for x in categorized_stocks[ind] if x['code'] not in [y['code'] for y in heroes]]
         sorted_normal = sorted(normals, key=lambda x: x['yield_raw'], reverse=True)[:15]
         categorized_stocks[ind] = sorted(heroes + sorted_normal, key=lambda x: x['yield_raw'], reverse=True)
@@ -158,12 +227,14 @@ try:
 except Exception as e:
     print(f"❌ 嚴重全域錯誤: {e}")
 
-all_industries = list(categorized_stocks.keys())
+all_industries = sorted(list(categorized_stocks.keys()))
 supply_chain_pool = sorted(supply_chain_pool, key=lambda x: x['code'])
 
 # ----------------------------------------------------------------
-# HTML 生成
+# HTML 前端自動化生成 (100% 封殺假公式)
 # ----------------------------------------------------------------
+json_db_str = json.dumps(csv_dividend_database, ensure_ascii=False)
+
 html_content = f"""
 <!DOCTYPE html>
 <html lang="zh-TW">
@@ -221,7 +292,7 @@ html_content = f"""
 <body>
     <nav class="navbar navbar-custom py-3">
         <div class="container">
-            <span class="navbar-brand">💡 彥維的 AI 兩階段價值存股大數據中心</span>
+            <span class="navbar-brand">💡 彥維的 AI 兩階段價值存股大數據中心 [100% 真理資料庫直驅]</span>
             <span class="badge bg-light text-dark p-2 border">網頁即時觀看時間：<span id="liveClockDisplay">載入中...</span></span>
         </div>
     </nav>
@@ -229,34 +300,32 @@ html_content = f"""
     <div class="container my-5">
         
         <div class="card dictionary-card shadow-sm">
-            <h5 class="fw-bold mb-1" style="color: #854d0e;">📖 實戰指標工具書：什麼是本益比與現金殖利率？</h5>
-            <p class="text-muted small mb-3">全市場雙階段漏斗篩選標準定義：</p>
+            <h5 class="fw-bold mb-1" style="color: #854d0e;">📖 實戰指標工具書：公開資訊觀測站真理資料庫直驅防線</h5>
+            <p class="text-muted small mb-3">全市場雙階段漏斗篩選標準 definition：</p>
             <div class="dictionary-grid">
                 <div class="dict-item">
                     <div class="dict-title" style="color: #2563eb;">📈 目前本益比 (PE Ratio)</div>
                     <div class="small text-secondary" style="line-height: 1.6;">
-                        <b>公式：</b>當前每股股價 除以 公司過去一年每股賺多少錢(EPS)。<br>
-                        • 電子科技股小於或等於 14.5 倍、傳統與金融股小於或等於 12.0 倍。
+                        • 電子科技股小於或等於 14.5 倍、傳統與金融股小於或等於 11.5 倍。
                     </div>
                 </div>
                 <div class="dict-item">
                     <div class="dict-title" style="color: #16a34a;">💰 現金殖利率 (Yield)</div>
                     <div class="small text-secondary" style="line-height: 1.6;">
-                        <b>公式：</b>公司發放的現金股利 除以 當前每股股價。<br>
-                        • 實質現金殖利率大於或等於 <b>4.80%</b> 時，即符合黃金防禦安全帶。
+                        • 當前公告之最新一期現金殖利率大於或等於 <b>4.80%</b> 時，即符合黃金安全帶。
                     </div>
                 </div>
                 <div class="dict-item">
-                    <div class="dict-title" style="color: #7c3aed;">🏢 股價淨值比 (PB Ratio)</div>
+                    <div class="dict-title" style="color: #7c3aed;">📁 15 份觀測站 CSV 真理資料庫直驅</div>
                     <div class="small text-secondary" style="line-height: 1.6;">
-                        • 全市場小於或等於 1.25 倍 視為資產被低估。
+                        • 下方抽屜之歷史數據<b>已完全封殺任何預估假公式</b>。不設任何估算填補，100% 由您提供的 15 份觀測站 CSV 原始資料進行 runtime 解析。
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="mb-5">
-            <h6 class="fw-bold mb-2 text-secondary">🔍 快速定位：輸入股票代號或名稱（例如：2412 或 中華電）：</h6>
+            <h6 class="fw-bold mb-2 text-secondary">🔍 快速定位：輸入股票代號或名稱：</h6>
             <div class="search-container">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 <input type="text" id="globalStockSearch" class="search-input" placeholder="不需點選群組，直接搜尋全台股關注與特區標的..." oninput="executeStockSearch()">
@@ -309,27 +378,17 @@ for s_idx, row in enumerate(supply_chain_pool):
                                 <div class="row g-3 p-4 mx-2 my-2 shadow-sm rounded border border-secondary bg-dark text-white">
                                     <div class="col-md-6">
                                         <div class="p-3 h-100 rounded" style="background-color: #1e293b; border-left: 4px solid #3b82f6;">
-                                            <h6 class="fw-bold text-info mb-2">📁 📊 過去 5 年歷史真實除權息明細 (直連大數據庫)：</h6>
+                                            <h6 class="fw-bold text-info mb-2">📁 📊 觀測站大數據直驅除權息明細 (無任何預估值)：</h6>
                                             <table class="table table-sm table-dark table-bordered text-center align-middle m-0" style="font-size: 0.82rem; border-color: #475569;">
                                                 <thead class="table-secondary text-dark">
                                                     <tr>
                                                         <th>配息年度</th>
-                                                        <th>實質現金股利 (元)</th>
-                                                        <th>實質股票股利 (股)</th>
+                                                        <th>實質現金股利</th>
+                                                        <th>實質股票股利</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="dividend-premium-body-{row['code']}">
-    """
-    for h in row['history']:
-        html_content += f"""
-                                                    <tr>
-                                                        <td><b>{h['year']}</b></td>
-                                                        <td class="text-success fw-bold">{h['cash']}</td>
-                                                        <td class="text-info">{h['stock']}</td>
-                                                    </tr>
-        """
-    html_content += f"""
-                                                </tbody>
+                                                    </tbody>
                                             </table>
                                         </div>
                                     </div>
@@ -420,27 +479,17 @@ for i, ind_name in enumerate(all_industries):
                                             <div class="row g-3 p-4 mx-2 my-2 shadow-sm rounded bg-white border">
                                                 <div class="col-md-6">
                                                     <div class="p-3 h-100 left-wing-box">
-                                                        <h6 class="fw-bold text-primary mb-2">📁 📊 過去 5 年歷史真實除權息明細 (直連大數據庫)：</h6>
+                                                        <h6 class="fw-bold text-primary mb-2">📁 📊 觀測站大數據直驅除權息明細 (無任何預估值)：</h6>
                                                         <table class="table table-sm table-bordered text-center align-middle m-0" style="font-size: 0.82rem;">
                                                             <thead class="table-light">
                                                                 <tr>
                                                                     <th>配息年度</th>
-                                                                    <th class="text-success fw-bold">實質現金股利 (元)</th>
-                                                                    <th class="text-primary fw-bold">實質股票股利 (股)</th>
+                                                                    <th class="text-success fw-bold">實質現金股利</th>
+                                                                    <th class="text-primary fw-bold">實質股票股利</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="dividend-body-{row['code']}">
-        """
-        for h in row['history']:
-            html_content += f"""
-                                                                <tr>
-                                                                    <td><b>{h['year']}</b></td>
-                                                                    <td class="text-success fw-bold">{h['cash']}</td>
-                                                                    <td class="text-primary fw-bold">{h['stock']}</td>
-                                                                </tr>
-            """
-        html_content += f"""
-                                                            </tbody>
+                                                                </tbody>
                                                         </table>
                                                     </div>
                                                 </div>
@@ -465,7 +514,10 @@ for i, ind_name in enumerate(all_industries):
                 </div>
     """
 
-html_content += """
+# 前端本地大字典注入
+json_db_str = json.dumps(csv_dividend_database, ensure_ascii=False)
+
+html_content += f"""
             </div>
         </div>
         
@@ -477,6 +529,8 @@ html_content += """
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+    const GLOBAL_CSV_DATABASE = {json_db_str};
+
     function startLiveClock() {
         const clockElement = document.getElementById('liveClockDisplay');
         if (!clockElement) return;
@@ -488,7 +542,7 @@ html_content += """
             const hh = String(now.getHours()).padStart(2, '0');
             const min = String(now.getMinutes()).padStart(2, '0');
             const ss = String(now.getSeconds()).padStart(2, '0');
-            clockElement.innerHTML = `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+            clockElement.innerHTML = `${{yyyy}}-${{mm}}-${{dd}} ${{hh}}:${{min}}:${{ss}}`;
         }, 1000);
     }
     document.addEventListener('DOMContentLoaded', startLiveClock);
@@ -507,8 +561,8 @@ html_content += """
         setTimeout(() => {
             let hasAnyMatch = false;
             if (query === '') {
-                rows.forEach(r => { r.style.display = ''; r.classList.remove('fade-out-ui'); });
-                drawers.forEach(d => { d.style.display = ''; if (!d.classList.contains('show')) d.style.display = 'none'; });
+                rows.forEach(r => {{ r.style.display = ''; r.classList.remove('fade-out-ui'); }});
+                drawers.forEach(d => {{ d.style.display = ''; if (!d.classList.contains('show')) d.style.display = 'none'; }});
                 pillContainer.style.display = '';
                 premiumSection.style.display = '';
                 const activeTabButton = document.querySelector('.nav-pills .nav-link.active');
@@ -520,7 +574,7 @@ html_content += """
             pillContainer.style.display = 'none';
             premiumSection.style.display = 'none';
             
-            rows.forEach(row => {
+            rows.forEach(row => {{
                 const searchKey = row.getAttribute('data-search').toLowerCase();
                 const code = searchKey.split('-')[0];
                 const detailDrawer = document.getElementById('reason-code-' + code) || document.getElementById('premium-code-' + code);
@@ -536,10 +590,10 @@ html_content += """
                     row.style.display = 'none';
                     if (detailDrawer) detailDrawer.style.display = 'none';
                 }
-            });
+            }});
             
-            if (!hasAnyMatch) { tabContent.style.display = 'none'; noResult.style.display = 'block'; }
-            else { tabContent.style.display = ''; noResult.style.display = 'none'; }
+            if (!hasAnyMatch) {{ tabContent.style.display = 'none'; noResult.style.display = 'block'; }}
+            else {{ tabContent.style.display = ''; noResult.style.display = 'none'; }}
         }, 60);
     }
 
@@ -549,39 +603,47 @@ html_content += """
             const rssUrl = `https://api.rss2json.com/v1/api.json?rss_url=https://tw.stock.yahoo.com/rss?s=` + code;
             fetch(rssUrl)
                 .then(res => res.json())
-                .then(data => {
+                .then(data => {{
                     if (data.status === 'ok' && data.items && data.items.length > 0) {
                         let html = '';
-                        data.items.slice(0, 3).forEach(item => {
+                        data.items.slice(0, 3).forEach(item => {{
                             html += `<div class='mb-3 small' style='border-bottom: 1px dashed #cbd5e1; padding-bottom: 8px; color:inherit;'>
-                                        • <b>[即時市場新聞]</b> <a href='${item.link}' target='_blank' style='font-weight:600; text-decoration:underline; color:inherit;'>${item.title}</a>
+                                        • <b>[即時市場新聞]</b> <a href='${{item.link}}' target='_blank' style='font-weight:600; text-decoration:underline; color:inherit;'>${{item.title}}</a>
                                      </div>`;
-                        });
+                        }});
                         zone.innerHTML = html;
-                    } else { throw new Error(); }
-                })
-                .catch(() => {
-                    zone.innerHTML = `<div class='mb-2 small'>• <b>[大數據位階體檢]</b> 當前個股實質現金殖利率為 <b>${yieldVal}</b>，明顯擊敗該產業平均防線 (平均值為 ${avgY}%)。</div>`;
-                })
-                .finally(() => { zone.setAttribute('data-loaded', 'true'); });
+                    } else {{ throw new Error(); }}
+                }})
+                .catch(() => {{
+                    zone.innerHTML = `<div class='mb-2 small'>• <b>[大數據位階體檢]</b> 當前個股實質現金殖利率為 <b>${{yieldVal}}</b>，明顯擊敗該產業防線 (平均值為 ${{avgY}}%)。</div>`;
+                }})
+                .finally(() => {{ zone.setAttribute('data-loaded', 'true'); }});
         }
 
         const divBody = document.getElementById('dividend-body-' + code) || document.getElementById('dividend-premium-body-' + code);
-        if (divBody && divBody.getAttribute('data-history-loaded') !== 'true' && code !== '1108' && code !== '1102' && code !== '2330' && code !== '3037' && code !== '2317' && code !== '2368') {
-            setTimeout(() => {
-                let actualCash = (parseFloat(yieldVal) * 0.4).toFixed(2);
-                if (parseFloat(actualCash) <= 0) actualCash = "1.20";
-                divBody.innerHTML = `
-                    <tr><td><b>113年度</b></td><td class="text-success fw-bold">${(parseFloat(actualCash)*1.2).toFixed(2)} 元</td><td class="text-primary fw-bold">0.00 股</td></tr>
-                    <tr><td><b>112年度</b></td><td class="text-success fw-bold">${parseFloat(actualCash).toFixed(2)} 元</td><td class="text-primary fw-bold">0.00 股</td></tr>
-                    <tr><td><b>111年度</b></td><td class="text-success fw-bold">${(parseFloat(actualCash)*0.9).toFixed(2)} 元</td><td class="text-primary fw-bold">0.00 股</td></tr>
-                    <tr><td><b>110年度</b></td><td class="text-success fw-bold">${(parseFloat(actualCash)*0.85).toFixed(2)} 元</td><td class="text-primary fw-bold">0.00 股</td></tr>
-                    <tr><td><b>109年度</b></td><td class="text-success fw-bold">${(parseFloat(actualCash)*0.75).toFixed(2)} 元</td><td class="text-primary fw-bold">0.00 股</td></tr>
-                `;
-                divBody.setAttribute('data-history-loaded', 'true');
-            }, 100);
+        if (divBody && divBody.getAttribute('data-history-loaded') !== 'true') {
+            const histData = GLOBAL_CSV_DATABASE[code];
+            if (histData && histData.length > 0) {
+                let html = '';
+                histData.forEach(h => {{
+                    html += `<tr>
+                                <td><b>${{h.year}}</b></td>
+                                <td class="text-success fw-bold">${{h.cash}}</td>
+                                <td class="text-info fw-bold">${{h.stock}}</td>
+                             </tr>`;
+                }});
+                divBody.innerHTML = html;
+            } else {{
+                divBody.innerHTML = `<tr><td colspan="3" class="text-muted small">檔案資料庫中無此股之歷史常態發放紀錄</td></tr>`;
+            }}
+            divBody.setAttribute('data-history-loaded', 'true');
         }
     }
     </script>
 </body>
 </html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+print("🎯 [100% 真實數據直驅版] 覆蓋完工！不含任何一絲假預估！")
