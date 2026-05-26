@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 import datetime
 
-print("🚀 [台積電×輝達雙供應鏈特區完全體] 啟動！正在打造頂級 AI 看盤大腦...")
+print("🚀 [全網頁視覺去重版] 啟動！確保特區股在下方常態板塊不重複露出...")
 
 twse_industry_code_map = {
     "01": "水泥工業", "02": "食品工業", "03": "塑料工業", "04": "紡織纖維",
@@ -15,30 +15,26 @@ twse_industry_code_map = {
     "30": "油電燃氣", "35": "綠能環保", "36": "數位雲端", "37": "運動休閒", "38": "居家生活"
 }
 
-# 💡 全局核心真理歷史股利庫（100% 精準對齊，消滅公式虛胖）
 REAL_HISTORY_MAP = {
-    "2330": [{"year": "113年度", "cash": "13.00 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "11.25 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "11.00 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "10.00 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "10.00 元", "stock": "0.00 股"}],
     "3037": [{"year": "113年度", "cash": "3.00 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "4.60 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "8.00 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "3.40 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "1.40 元", "stock": "0.00 股"}],
     "1108": [{"year": "113年度", "cash": "0.75 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "1.00 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "0.80 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "0.60 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "0.50 元", "stock": "0.00 股"}],
     "1102": [{"year": "113年度", "cash": "2.10 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "2.30 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "2.10 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "3.40 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "3.55 元", "stock": "0.00 股"}],
+    "2330": [{"year": "113年度", "cash": "13.00 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "11.25 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "11.00 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "10.00 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "10.00 元", "stock": "0.00 股"}],
     "2317": [{"year": "113年度", "cash": "5.40 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "5.30 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "5.20 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "4.20 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "4.20 元", "stock": "0.00 股"}]
 }
 
-# 👑 戰略核心兩大供應鏈名冊（專屬特區股票與其靈魂定位）
 SUPPLY_CHAIN_MAP = {
-    # 1. 台積電供應鏈 (上/中/下游)
-    "3661": "🧬 台積電上遊 · 世芯世芯 (AI ASIC 設計)",
-    "3443": "🧬 台積電上遊 · 創意電子 (IP 矽智財授權)",
+    "3661": "🧬 台積電上游 · 世芯世芯 (AI ASIC 設計)",
+    "3443": "🧬 台積電上游 · 創意電子 (IP 矽智財授權)",
     "2330": "👑 供應鏈心臟 · 台積電本身 (先進製程代工)",
     "6187": "📦 台積電中游 · 萬潤自動化 (CoWoS 封裝設備)",
     "3131": "📦 台積電中游 · 弘塑科技 (先進封裝濕製程)",
     "3037": "⚡ 台積電中游 · 欣興電子 (Blackwell 高階載板)",
-    # 2. 輝達供應鏈 (上/中/下游)
     "2317": "🚗 輝達中下游 · 鴻海家族 (NVL72 整機櫃代工)",
     "2382": "💻 輝達中下游 · 廣達電腦 (AI 伺服器 ODM 龍頭)",
     "6669": "💻 輝達中下游 · 緯穎科技 (ASIC 與高階伺服器)",
     "3017": "🔥 輝達下游鏈 · 奇鋐科技 (3D VC 與水冷模組)",
-    "3015": "🔥 輝達下游鏈 · 全漢/全漢家族 (伺服器高階風扇)",
+    "3015": "🔥 輝達下游鏈 · 全漢家族 (伺服器高階風扇)",
     "2421": "🔥 輝達下游鏈 · 建準電機 (高階風扇散熱核心)",
     "2308": "⚡ 供應鏈基建 · 台達電子 (AI 高功率電源管理)"
 }
@@ -57,7 +53,6 @@ try:
     res_price = requests.get(url_price, timeout=30).json()
     price_dict = {str(x.get('Code', '')).strip(): str(x.get('ClosingPrice', '')) for x in res_price}
 
-    # 統計產業平均值
     industry_yields = {}
     for _, item in df_data.iterrows():
         code = item.get('Code', '').strip()
@@ -73,7 +68,7 @@ try:
     ind_avg_yield = {k: (sum(v)/len(v)) for k, v in industry_yields.items() if len(v) > 0}
     
     categorized_stocks = {}
-    supply_chain_pool = [] # 儲存特區專屬股票群
+    supply_chain_pool = []
 
     for _, item in df_data.iterrows():
         code = item.get('Code', '').strip()
@@ -96,7 +91,6 @@ try:
 
         avg_y = ind_avg_yield.get(industry_type, 4.0)
         
-        # 雙階段篩選：只要在 AI 供應鏈清單或擊敗同業平均者皆保留
         is_in_supply_chain = code in SUPPLY_CHAIN_MAP
         is_focusable = (yield_val >= avg_y) or is_in_supply_chain or (code in ["1108", "2450", "1102"])
         if not is_focusable: continue
@@ -105,7 +99,6 @@ try:
         is_pe_low = (0 < pe_val <= 14.5) if is_tech else (0 < pe_val <= 11.5)
         is_yield_high = (yield_val >= 4.80)
         
-        # 定位標籤與頭銜設定
         if is_in_supply_chain:
             status = "🟢 AI 核心供應鏈"
             color = "success"
@@ -142,16 +135,17 @@ try:
             'history': history_records, 'focus_tag': focus_tag, 'avg_y': f"{avg_y:.2f}"
         }
         
-        # 分流：如果是供應鏈特區股票，額外塞進獨立名冊
         if is_in_supply_chain:
             supply_chain_pool.append(stock_info)
         
-        if industry_type not in categorized_stocks: categorized_stocks[industry_type] = []
-        categorized_stocks[industry_type].append(stock_info)
+        # 💡 【去重核心優化】：如果它是特區供應鏈股票，下方常態大板塊名冊直接不收錄它，徹底解決重疊視覺疲勞！
+        if not is_in_supply_chain:
+            if industry_type not in categorized_stocks: categorized_stocks[industry_type] = []
+            categorized_stocks[industry_type].append(stock_info)
 
-    # 執行官方常態分頁的淘汰切片（強制保護白名單股不被擠掉）
+    # 保留常態防線
     for ind in list(categorized_stocks.keys()):
-        heroes = [x for x in categorized_stocks[ind] if x['code'] in SUPPLY_CHAIN_MAP or x['code'] in ["1108", "2450", "1102"]]
+        heroes = [x for x in categorized_stocks[ind] if x['code'] in ["1108", "2450", "1102"]]
         normals = [x for x in categorized_stocks[ind] if x['code'] not in [y['code'] for y in heroes]]
         sorted_normal = sorted(normals, key=lambda x: x['yield_raw'], reverse=True)[:15]
         categorized_stocks[ind] = sorted(heroes + sorted_normal, key=lambda x: x['yield_raw'], reverse=True)
@@ -160,11 +154,10 @@ except Exception as e:
     print(f"❌ 嚴重全域錯誤: {e}")
 
 all_industries = list(categorized_stocks.keys())
-# 按特定排序讓特區股票群在前端能呈現最漂亮的排列
 supply_chain_pool = sorted(supply_chain_pool, key=lambda x: x['code'])
 
 # ----------------------------------------------------------------
-# HTML 網頁生成 (核心升級：強勢開闢台積電×輝達上中下游獨立戰略特區卡片)
+# HTML 生成
 # ----------------------------------------------------------------
 html_content = f"""
 <!DOCTYPE html>
@@ -214,7 +207,6 @@ html_content = f"""
         .fade-out-ui {{ opacity: 0.15; pointer-events: none; }}
         .no-result-card {{ display: none; text-align: center; padding: 40px; border: 2px dashed #cbd5e1; border-radius: 16px; color: #64748b; margin-top: 20px; }}
         
-        /* 🔥 特區專屬耀眼樣式 */
         .premium-special-card {{ background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: none; border-radius: 20px; padding: 25px; box-shadow: 0 10px 25px rgba(15,23,42,0.15); margin-bottom: 45px; position: relative; overflow: hidden; }}
         .premium-special-card::after {{ content: "AI LINK"; position: absolute; right: -20px; bottom: -20px; font-size: 7rem; font-weight: 900; color: rgba(255,255,255,0.03); pointer-events: none; }}
         .premium-title {{ font-size: 1.4rem; font-weight: 800; color: #f8fafc; display: flex; align-items: center; gap: 10px; }}
@@ -259,7 +251,7 @@ html_content = f"""
         </div>
 
         <div class="mb-5">
-            <h6 class="fw-bold mb-2 text-secondary">🔍 快速定位：輸入股票代號或名稱（例如：3037 或 欣興）：</h6>
+            <h6 class="fw-bold mb-2 text-secondary">🔍 快速定位：輸入股票代號或名稱（例如：2330 或 台積電）：</h6>
             <div class="search-container">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 <input type="text" id="globalStockSearch" class="search-input" placeholder="不需點選群組，直接搜尋全台股關注與特區標的..." oninput="executeStockSearch()">
@@ -505,7 +497,7 @@ html_content += """
             }
             
             pillContainer.style.display = 'none';
-            premiumSection.style.display = 'none'; // 搜尋時打破版塊壁壘，統一由搜尋引擎結果露出
+            premiumSection.style.display = 'none'; // 搜尋時全面打破板塊，由大腦統一露出
             
             rows.forEach(row => {
                 const searchKey = row.getAttribute('data-search').toLowerCase();
@@ -515,7 +507,7 @@ html_content += """
                 if (searchKey.includes(query)) {
                     row.style.display = '';
                     row.closest('.tab-pane')?.classList.add('show', 'active');
-                    row.closest('#premiumSpecialSection')?.removeAttribute('style'); // 如果特區內有符合，解鎖特區部分露出
+                    row.closest('#premiumSpecialSection')?.removeAttribute('style'); // 如果特區內中標，解鎖露出
                     row.classList.remove('fade-out-ui');
                     if (detailDrawer && detailDrawer.classList.contains('show')) detailDrawer.style.display = '';
                     hasAnyMatch = true;
@@ -531,7 +523,6 @@ html_content += """
     }
 
     function loadLiveNews(code, yieldVal, avgY) {
-        // 同步加載常態區與特區的前端新聞
         const zone = document.getElementById('news-zone-' + code) || document.getElementById('news-premium-zone-' + code);
         if (zone && zone.getAttribute('data-loaded') !== 'true') {
             const rssUrl = `https://api.rss2json.com/v1/api.json?rss_url=https://tw.stock.yahoo.com/rss?s=` + code;
@@ -554,7 +545,6 @@ html_content += """
                 .finally(() => { zone.setAttribute('data-loaded', 'true'); });
         }
 
-        // 同步加載常態區與特區的5年歷史
         const divBody = document.getElementById('dividend-body-' + code) || document.getElementById('dividend-premium-body-' + code);
         if (divBody && divBody.getAttribute('data-history-loaded') !== 'true' && code !== '1108' && code !== '1102' && code !== '2330' && code !== '3037' && code !== '2317') {
             setTimeout(() => {
@@ -578,4 +568,4 @@ html_content += """
 
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_content)
-print("🎯 [台積電×輝達核心產業鏈獨立戰略特區卡片] 部署成功！")
+print("🎯 [全網頁視覺去重完全體] 部署成功！")
