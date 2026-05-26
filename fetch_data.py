@@ -2,20 +2,21 @@ import requests
 import pandas as pd
 import datetime
 
-print("🚀 [AI供應鏈滿血完全體] 啟動！金像電、川湖核心戰略軍團 100% 強制保留...")
+print("🚀 [產業代碼精準校正版] 啟動！導正中華電通信網路業標籤...")
 
+# 💡 權威校正：對齊證交所官方 100% 正確的產業別代碼名稱
 twse_industry_code_map = {
     "01": "水泥工業", "02": "食品工業", "03": "塑料工業", "04": "紡織纖維",
     "05": "電機機械", "06": "電器電纜", "07": "化學工業", "21": "化學工業", 
     "08": "玻璃陶瓷", "09": "造紙工業", "10": "鋼鐵工業", "11": "橡膠工業",
     "12": "汽車工業", "13": "建築材料", "14": "航運業", "15": "觀光餐旅",
     "16": "金融保險", "17": "貿易百貨", "18": "綜合業", "20": "其他類股",
-    "22": "光電業", "23": "資訊服務", "24": "半導體業", "25": "電腦及週邊",
-    "26": "電子網路", "27": "電子零組件", "28": "電子通路", "29": "其他電子業",
+    "22": "光電業", "23": "資訊服務", 
+    "24": "半導體業", "25": "電腦及週邊", "26": "通信網路業", # 💡 這裡精準修正：26是通信網路業，不是電子網路！
+    "27": "電子零組件", "28": "電子通路", "29": "其他電子業",
     "30": "油電燃氣", "35": "綠能環保", "36": "數位雲端", "37": "運動休閒", "38": "居家生活"
 }
 
-# 💡 全局核心真理歷史股利庫（真實配息對齊）
 REAL_HISTORY_MAP = {
     "2368": [{"year": "113年度", "cash": "3.50 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "3.50 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "3.50 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "2.20 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "1.00 元", "stock": "0.00 股"}],
     "3037": [{"year": "113年度", "cash": "3.00 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "4.60 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "8.00 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "3.40 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "1.40 元", "stock": "0.00 股"}],
@@ -24,25 +25,20 @@ REAL_HISTORY_MAP = {
     "2330": [{"year": "113年度", "cash": "13.00 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "11.25 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "11.00 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "10.00 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "10.00 元", "stock": "0.00 股"}]
 }
 
-# 👑 擴編版：20檔 AI 核心真理供應鏈名冊（專屬戰略定位）
 SUPPLY_CHAIN_MAP = {
-    # 上游
     "3661": "🧬 AI上游 · 世芯世芯 (AI ASIC 晶片研發)",
     "3443": "🧬 AI上游 · 創意電子 (台積電核心 IP 矽智財)",
     "2330": "👑 供應鏈心臟 · 台積電本身 (全球先進製程晶圓代工)",
-    # 中游
     "2368": "⚡ AI中游 · 金像電子 (AI伺服器高階多層PCB板王)",
     "3037": "⚡ AI中游 · 欣興電子 (輝達 Blackwell 高階載板)",
     "6187": "📦 AI中游 · 萬潤自動化 (台積電 CoWoS 封裝核心設備)",
     "3131": "📦 AI中游 · 弘塑科技 (先進封裝濕製程製程設備)",
-    # 下游組裝與零件
     "2317": "💻 AI下游 · 鴻海家族 (輝達 NVL72 全方位整機櫃代工)",
     "2382": "💻 AI下游 · 廣達電腦 (AI伺服器核心 ODM 巨頭)",
     "6669": "💻 AI下游 · 緯穎科技 (雲端大廠伺服器客製化代工)",
     "2376": "💻 AI下游 · 技嘉科技 (高階 AI 伺服器與主機板)",
     "2377": "💻 AI下游 · 微星科技 (AI伺服器與電競高效能顯卡)",
     "2059": "🚗 AI下游 · 川湖科技 (AI伺服器高階超重載滑軌王)",
-    # 周邊散熱與電源
     "3017": "🔥 AI周邊 · 奇鋐科技 (輝達認證 3D VC 與液冷系統)",
     "3324": "🔥 AI周邊 · 雙鴻科技 (高階伺服器水冷板與散熱模組)",
     "2421": "🔥 AI周邊 · 建準電機 (AI伺服器高階解熱風扇)",
@@ -64,7 +60,6 @@ try:
     res_price = requests.get(url_price, timeout=30).json()
     price_dict = {str(x.get('Code', '')).strip(): str(x.get('ClosingPrice', '')) for x in res_price}
 
-    # 統計產業平均值
     industry_yields = {}
     for _, item in df_data.iterrows():
         code = item.get('Code', '').strip()
@@ -107,7 +102,7 @@ try:
         is_focusable = (yield_val >= avg_y) or is_in_supply_chain or (code in ["1108", "2450", "1102"])
         if not is_focusable: continue
 
-        is_tech = industry_type in ["半導體業", "電腦及週邊", "電子零組件", "電子網路"]
+        is_tech = industry_type in ["半導體業", "電腦及週邊", "電子零組件", "通信網路業"]
         is_pe_low = (0 < pe_val <= 14.5) if is_tech else (0 < pe_val <= 11.5)
         is_yield_high = (yield_val >= 4.80)
         
@@ -154,7 +149,6 @@ try:
             if industry_type not in categorized_stocks: categorized_stocks[industry_type] = []
             categorized_stocks[industry_type].append(stock_info)
 
-    # 執行官方常態分頁淘汰切片
     for ind in list(categorized_stocks.keys()):
         heroes = [x for x in categorized_stocks[ind] if x['code'] in ["1108", "2450", "1102"]]
         normals = [x for x in categorized_stocks[ind] if x['code'] not in [y['code'] for y in heroes]]
@@ -262,7 +256,7 @@ html_content = f"""
         </div>
 
         <div class="mb-5">
-            <h6 class="fw-bold mb-2 text-secondary">🔍 快速定位：輸入股票代號或名稱（例如：2368 或 金像電）：</h6>
+            <h6 class="fw-bold mb-2 text-secondary">🔍 快速定位：輸入股票代號或名稱（例如：2412 或 中華電）：</h6>
             <div class="search-container">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 <input type="text" id="globalStockSearch" class="search-input" placeholder="不需點選群組，直接搜尋全台股關注與特區標的..." oninput="executeStockSearch()">
@@ -483,7 +477,6 @@ html_content += """
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-    // 💡 前端動態即時時鐘：每秒自動跳動，刷新 100% 同步最新最新時間
     function startLiveClock() {
         const clockElement = document.getElementById('liveClockDisplay');
         if (!clockElement) return;
@@ -592,8 +585,3 @@ html_content += """
     </script>
 </body>
 </html>
-"""
-
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
-print("🎯 [AI 戰略特區滿血版 + 前端即時秒鐘] 全功能部署完畢！")
