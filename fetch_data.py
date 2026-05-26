@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 import datetime
 
-print("🚀 [全網頁視覺去重版] 啟動！確保特區股在下方常態板塊不重複露出...")
+print("🚀 [AI供應鏈滿血完全體] 啟動！金像電、川湖核心戰略軍團 100% 強制保留...")
 
 twse_industry_code_map = {
     "01": "水泥工業", "02": "食品工業", "03": "塑料工業", "04": "紡織纖維",
@@ -15,28 +15,39 @@ twse_industry_code_map = {
     "30": "油電燃氣", "35": "綠能環保", "36": "數位雲端", "37": "運動休閒", "38": "居家生活"
 }
 
+# 💡 全局核心真理歷史股利庫（真實配息對齊）
 REAL_HISTORY_MAP = {
+    "2368": [{"year": "113年度", "cash": "3.50 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "3.50 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "3.50 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "2.20 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "1.00 元", "stock": "0.00 股"}],
     "3037": [{"year": "113年度", "cash": "3.00 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "4.60 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "8.00 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "3.40 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "1.40 元", "stock": "0.00 股"}],
     "1108": [{"year": "113年度", "cash": "0.75 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "1.00 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "0.80 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "0.60 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "0.50 元", "stock": "0.00 股"}],
     "1102": [{"year": "113年度", "cash": "2.10 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "2.30 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "2.10 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "3.40 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "3.55 元", "stock": "0.00 股"}],
-    "2330": [{"year": "113年度", "cash": "13.00 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "11.25 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "11.00 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "10.00 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "10.00 元", "stock": "0.00 股"}],
-    "2317": [{"year": "113年度", "cash": "5.40 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "5.30 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "5.20 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "4.20 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "4.20 元", "stock": "0.00 股"}]
+    "2330": [{"year": "113年度", "cash": "13.00 元", "stock": "0.00 股"}, {"year": "112年度", "cash": "11.25 元", "stock": "0.00 股"}, {"year": "111年度", "cash": "11.00 元", "stock": "0.00 股"}, {"year": "110年度", "cash": "10.00 元", "stock": "0.00 股"}, {"year": "109年度", "cash": "10.00 元", "stock": "0.00 股"}]
 }
 
+# 👑 擴編版：20檔 AI 核心真理供應鏈名冊（專屬戰略定位）
 SUPPLY_CHAIN_MAP = {
-    "3661": "🧬 台積電上游 · 世芯世芯 (AI ASIC 設計)",
-    "3443": "🧬 台積電上游 · 創意電子 (IP 矽智財授權)",
-    "2330": "👑 供應鏈心臟 · 台積電本身 (先進製程代工)",
-    "6187": "📦 台積電中游 · 萬潤自動化 (CoWoS 封裝設備)",
-    "3131": "📦 台積電中游 · 弘塑科技 (先進封裝濕製程)",
-    "3037": "⚡ 台積電中游 · 欣興電子 (Blackwell 高階載板)",
-    "2317": "🚗 輝達中下游 · 鴻海家族 (NVL72 整機櫃代工)",
-    "2382": "💻 輝達中下游 · 廣達電腦 (AI 伺服器 ODM 龍頭)",
-    "6669": "💻 輝達中下游 · 緯穎科技 (ASIC 與高階伺服器)",
-    "3017": "🔥 輝達下游鏈 · 奇鋐科技 (3D VC 與水冷模組)",
-    "3015": "🔥 輝達下游鏈 · 全漢家族 (伺服器高階風扇)",
-    "2421": "🔥 輝達下游鏈 · 建準電機 (高階風扇散熱核心)",
-    "2308": "⚡ 供應鏈基建 · 台達電子 (AI 高功率電源管理)"
+    # 上游
+    "3661": "🧬 AI上游 · 世芯世芯 (AI ASIC 晶片研發)",
+    "3443": "🧬 AI上游 · 創意電子 (台積電核心 IP 矽智財)",
+    "2330": "👑 供應鏈心臟 · 台積電本身 (全球先進製程晶圓代工)",
+    # 中游
+    "2368": "⚡ AI中游 · 金像電子 (AI伺服器高階多層PCB板王)",
+    "3037": "⚡ AI中游 · 欣興電子 (輝達 Blackwell 高階載板)",
+    "6187": "📦 AI中游 · 萬潤自動化 (台積電 CoWoS 封裝核心設備)",
+    "3131": "📦 AI中游 · 弘塑科技 (先進封裝濕製程製程設備)",
+    # 下游組裝與零件
+    "2317": "💻 AI下游 · 鴻海家族 (輝達 NVL72 全方位整機櫃代工)",
+    "2382": "💻 AI下游 · 廣達電腦 (AI伺服器核心 ODM 巨頭)",
+    "6669": "💻 AI下游 · 緯穎科技 (雲端大廠伺服器客製化代工)",
+    "2376": "💻 AI下游 · 技嘉科技 (高階 AI 伺服器與主機板)",
+    "2377": "💻 AI下游 · 微星科技 (AI伺服器與電競高效能顯卡)",
+    "2059": "🚗 AI下游 · 川湖科技 (AI伺服器高階超重載滑軌王)",
+    # 周邊散熱與電源
+    "3017": "🔥 AI周邊 · 奇鋐科技 (輝達認證 3D VC 與液冷系統)",
+    "3324": "🔥 AI周邊 · 雙鴻科技 (高階伺服器水冷板與散熱模組)",
+    "2421": "🔥 AI周邊 · 建準電機 (AI伺服器高階解熱風扇)",
+    "3015": "🔥 AI周邊 · 全漢家族 (高階強韌伺服器風扇與電源)",
+    "2308": "⚡ AI基建 · 台達電子 (全球 AI 高功率專用電源管理)"
 }
 
 try:
@@ -53,6 +64,7 @@ try:
     res_price = requests.get(url_price, timeout=30).json()
     price_dict = {str(x.get('Code', '')).strip(): str(x.get('ClosingPrice', '')) for x in res_price}
 
+    # 統計產業平均值
     industry_yields = {}
     for _, item in df_data.iterrows():
         code = item.get('Code', '').strip()
@@ -138,12 +150,11 @@ try:
         if is_in_supply_chain:
             supply_chain_pool.append(stock_info)
         
-        # 💡 【去重核心優化】：如果它是特區供應鏈股票，下方常態大板塊名冊直接不收錄它，徹底解決重疊視覺疲勞！
         if not is_in_supply_chain:
             if industry_type not in categorized_stocks: categorized_stocks[industry_type] = []
             categorized_stocks[industry_type].append(stock_info)
 
-    # 保留常態防線
+    # 執行官方常態分頁淘汰切片
     for ind in list(categorized_stocks.keys()):
         heroes = [x for x in categorized_stocks[ind] if x['code'] in ["1108", "2450", "1102"]]
         normals = [x for x in categorized_stocks[ind] if x['code'] not in [y['code'] for y in heroes]]
@@ -217,7 +228,7 @@ html_content = f"""
     <nav class="navbar navbar-custom py-3">
         <div class="container">
             <span class="navbar-brand">💡 彥維的 AI 兩階段價值存股大數據中心</span>
-            <span class="badge bg-light text-dark p-2 border">官方數據同步時間：{datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}</span>
+            <span class="badge bg-light text-dark p-2 border">網頁即時觀看時間：<span id="liveClockDisplay">載入中...</span></span>
         </div>
     </nav>
 
@@ -251,7 +262,7 @@ html_content = f"""
         </div>
 
         <div class="mb-5">
-            <h6 class="fw-bold mb-2 text-secondary">🔍 快速定位：輸入股票代號或名稱（例如：2330 或 台積電）：</h6>
+            <h6 class="fw-bold mb-2 text-secondary">🔍 快速定位：輸入股票代號或名稱（例如：2368 或 金像電）：</h6>
             <div class="search-container">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 <input type="text" id="globalStockSearch" class="search-input" placeholder="不需點選群組，直接搜尋全台股關注與特區標的..." oninput="executeStockSearch()">
@@ -472,6 +483,23 @@ html_content += """
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+    // 💡 前端動態即時時鐘：每秒自動跳動，刷新 100% 同步最新最新時間
+    function startLiveClock() {
+        const clockElement = document.getElementById('liveClockDisplay');
+        if (!clockElement) return;
+        setInterval(() => {
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            const hh = String(now.getHours()).padStart(2, '0');
+            const min = String(now.getMinutes()).padStart(2, '0');
+            const ss = String(now.getSeconds()).padStart(2, '0');
+            clockElement.innerHTML = `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+        }, 1000);
+    }
+    document.addEventListener('DOMContentLoaded', startLiveClock);
+
     function executeStockSearch() {
         const query = document.getElementById('globalStockSearch').value.trim().toLowerCase();
         const rows = document.querySelectorAll('.clickable-row');
@@ -497,7 +525,7 @@ html_content += """
             }
             
             pillContainer.style.display = 'none';
-            premiumSection.style.display = 'none'; // 搜尋時全面打破板塊，由大腦統一露出
+            premiumSection.style.display = 'none';
             
             rows.forEach(row => {
                 const searchKey = row.getAttribute('data-search').toLowerCase();
@@ -507,7 +535,7 @@ html_content += """
                 if (searchKey.includes(query)) {
                     row.style.display = '';
                     row.closest('.tab-pane')?.classList.add('show', 'active');
-                    row.closest('#premiumSpecialSection')?.removeAttribute('style'); // 如果特區內中標，解鎖露出
+                    row.closest('#premiumSpecialSection')?.removeAttribute('style');
                     row.classList.remove('fade-out-ui');
                     if (detailDrawer && detailDrawer.classList.contains('show')) detailDrawer.style.display = '';
                     hasAnyMatch = true;
@@ -546,7 +574,7 @@ html_content += """
         }
 
         const divBody = document.getElementById('dividend-body-' + code) || document.getElementById('dividend-premium-body-' + code);
-        if (divBody && divBody.getAttribute('data-history-loaded') !== 'true' && code !== '1108' && code !== '1102' && code !== '2330' && code !== '3037' && code !== '2317') {
+        if (divBody && divBody.getAttribute('data-history-loaded') !== 'true' && code !== '1108' && code !== '1102' && code !== '2330' && code !== '3037' && code !== '2317' && code !== '2368') {
             setTimeout(() => {
                 let actualCash = (parseFloat(yieldVal) * 0.4).toFixed(2);
                 if (parseFloat(actualCash) <= 0) actualCash = "1.20";
@@ -568,4 +596,4 @@ html_content += """
 
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_content)
-print("🎯 [全網頁視覺去重完全體] 部署成功！")
+print("🎯 [AI 戰略特區滿血版 + 前端即時秒鐘] 全功能部署完畢！")

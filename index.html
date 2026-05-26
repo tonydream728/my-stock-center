@@ -56,7 +56,7 @@
     <nav class="navbar navbar-custom py-3">
         <div class="container">
             <span class="navbar-brand">💡 彥維的 AI 兩階段價值存股大數據中心</span>
-            <span class="badge bg-light text-dark p-2 border">官方數據同步時間：2026-05-26 07:56</span>
+            <span class="badge bg-light text-dark p-2 border">網頁即時觀看時間：<span id="liveClockDisplay">載入中...</span></span>
         </div>
     </nav>
 
@@ -90,7 +90,7 @@
         </div>
 
         <div class="mb-5">
-            <h6 class="fw-bold mb-2 text-secondary">🔍 快速定位：輸入股票代號或名稱（例如：2330 或 台積電）：</h6>
+            <h6 class="fw-bold mb-2 text-secondary">🔍 快速定位：輸入股票代號或名稱（例如：2368 或 金像電）：</h6>
             <div class="search-container">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 <input type="text" id="globalStockSearch" class="search-input" placeholder="不需點選群組，直接搜尋全台股關注與特區標的..." oninput="executeStockSearch()">
@@ -103,7 +103,7 @@
                     ⚡ 護國神山與全球 AI 核心產業鏈特區
                     <span class="premium-label-ai">TSMC × NVIDIA 上中下游完全體</span>
                 </div>
-                <span class="text-muted small text-light-50">精選核心戰略鏈共 11 檔</span>
+                <span class="text-muted small text-light-50">精選核心戰略鏈共 15 檔</span>
             </div>
             <div class="table-responsive">
                 <table class="table table-dark table-striped table-hover align-middle mb-0 rounded overflow-hidden" style="--bs-table-bg: #1e293b; border: 1px solid #334155;">
@@ -119,12 +119,90 @@
                     </thead>
                     <tbody>
 
+                        <tr class="clickable-row text-white" data-search="2059-川湖" data-bs-toggle="collapse" data-bs-target="#premium-code-2059" aria-expanded="false" aria-controls="premium-code-2059" onclick="loadLiveNews('2059', '1.02%', '2.19')">
+                            <td class="ps-4 fw-bold" style="color: #38bdf8;">2059</td>
+                            <td>
+                                <div class="d-flex flex-column align-items-start">
+                                    <span class="fw-bold" style="font-size: 1.05rem; color: #f8fafc;">川湖</span>
+                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">🚗 AI下游 · 川湖科技 (AI伺服器高階超重載滑軌王)</span>
+                                </div>
+                            </td>
+                            <td><span class="fw-bold text-warning">4980.00 元</span></td>
+                            <td>43.9 倍</td>
+                            <td class="fw-bold" style="color: #4ade80;">1.02%</td>
+                            <td class="pe-4">
+                                <span class="badge bg-success p-2" style="border-radius: 50px;">🟢 AI 核心供應鏈</span>
+                                <span class="custom-focus-badge bg-info text-dark ms-1" style="border-radius: 6px; font-weight:800;">🚀 戰略核心股</span>
+                            </td>
+                        </tr>
+                        <tr id="premium-code-2059" class="collapse stock-detail-drawer" data-search-detail="2059-川湖">
+                            <td colspan="6" class="p-0" style="background-color: #0f172a;">
+                                <div class="row g-3 p-4 mx-2 my-2 shadow-sm rounded border border-secondary bg-dark text-white">
+                                    <div class="col-md-6">
+                                        <div class="p-3 h-100 rounded" style="background-color: #1e293b; border-left: 4px solid #3b82f6;">
+                                            <h6 class="fw-bold text-info mb-2">📁 📊 過去 5 年歷史真實除權息明細 (直連大數據庫)：</h6>
+                                            <table class="table table-sm table-dark table-bordered text-center align-middle m-0" style="font-size: 0.82rem; border-color: #475569;">
+                                                <thead class="table-secondary text-dark">
+                                                    <tr>
+                                                        <th>配息年度</th>
+                                                        <th>實質現金股利 (元)</th>
+                                                        <th>實質股票股利 (股)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="dividend-premium-body-2059">
+    
+                                                    <tr>
+                                                        <td><b>113年度</b></td>
+                                                        <td class="text-success fw-bold">50.80 元</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>112年度</b></td>
+                                                        <td class="text-success fw-bold">0.00 元</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>111年度</b></td>
+                                                        <td class="text-success fw-bold">載入中</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>110年度</b></td>
+                                                        <td class="text-success fw-bold">載入中</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>109年度</b></td>
+                                                        <td class="text-success fw-bold">載入中</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3 h-100 rounded" style="background-color: #1e293b; border-left: 4px solid #10b981;">
+                                            <h6 class="fw-bold text-success mb-3">📰 該公司當下即時市場動態與真實新聞訊息：</h6>
+                                            <div id="news-premium-zone-2059" class="market-news-zone" style="max-height: 250px; overflow-y: auto;">
+                                                <div class="text-muted small text-light-50">⏳ 正在即時調取 Yahoo 財經實時新聞...</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+    
                         <tr class="clickable-row text-white" data-search="2308-台達電" data-bs-toggle="collapse" data-bs-target="#premium-code-2308" aria-expanded="false" aria-controls="premium-code-2308" onclick="loadLiveNews('2308', '0.51%', '2.19')">
                             <td class="ps-4 fw-bold" style="color: #38bdf8;">2308</td>
                             <td>
                                 <div class="d-flex flex-column align-items-start">
                                     <span class="fw-bold" style="font-size: 1.05rem; color: #f8fafc;">台達電</span>
-                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">⚡ 供應鏈基建 · 台達電子 (AI 高功率電源管理)</span>
+                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">⚡ AI基建 · 台達電子 (全球 AI 高功率專用電源管理)</span>
                                 </div>
                             </td>
                             <td><span class="fw-bold text-warning">2290.00 元</span></td>
@@ -202,7 +280,7 @@
                             <td>
                                 <div class="d-flex flex-column align-items-start">
                                     <span class="fw-bold" style="font-size: 1.05rem; color: #f8fafc;">鴻海</span>
-                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">🚗 輝達中下游 · 鴻海家族 (NVL72 整機櫃代工)</span>
+                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">💻 AI下游 · 鴻海家族 (輝達 NVL72 全方位整機櫃代工)</span>
                                 </div>
                             </td>
                             <td><span class="fw-bold text-warning">261.00 元</span></td>
@@ -231,31 +309,31 @@
     
                                                     <tr>
                                                         <td><b>113年度</b></td>
-                                                        <td class="text-success fw-bold">5.40 元</td>
+                                                        <td class="text-success fw-bold">7.20 元</td>
                                                         <td class="text-info">0.00 股</td>
                                                     </tr>
         
                                                     <tr>
                                                         <td><b>112年度</b></td>
-                                                        <td class="text-success fw-bold">5.30 元</td>
+                                                        <td class="text-success fw-bold">0.00 元</td>
                                                         <td class="text-info">0.00 股</td>
                                                     </tr>
         
                                                     <tr>
                                                         <td><b>111年度</b></td>
-                                                        <td class="text-success fw-bold">5.20 元</td>
+                                                        <td class="text-success fw-bold">載入中</td>
                                                         <td class="text-info">0.00 股</td>
                                                     </tr>
         
                                                     <tr>
                                                         <td><b>110年度</b></td>
-                                                        <td class="text-success fw-bold">4.20 元</td>
+                                                        <td class="text-success fw-bold">載入中</td>
                                                         <td class="text-info">0.00 股</td>
                                                     </tr>
         
                                                     <tr>
                                                         <td><b>109年度</b></td>
-                                                        <td class="text-success fw-bold">4.20 元</td>
+                                                        <td class="text-success fw-bold">載入中</td>
                                                         <td class="text-info">0.00 股</td>
                                                     </tr>
         
@@ -280,7 +358,7 @@
                             <td>
                                 <div class="d-flex flex-column align-items-start">
                                     <span class="fw-bold" style="font-size: 1.05rem; color: #f8fafc;">台積電</span>
-                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">👑 供應鏈心臟 · 台積電本身 (先進製程代工)</span>
+                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">👑 供應鏈心臟 · 台積電本身 (全球先進製程晶圓代工)</span>
                                 </div>
                             </td>
                             <td><span class="fw-bold text-warning">2310.00 元</span></td>
@@ -353,12 +431,246 @@
                             </td>
                         </tr>
     
+                        <tr class="clickable-row text-white" data-search="2368-金像電" data-bs-toggle="collapse" data-bs-target="#premium-code-2368" aria-expanded="false" aria-controls="premium-code-2368" onclick="loadLiveNews('2368', '0.70%', '2.19')">
+                            <td class="ps-4 fw-bold" style="color: #38bdf8;">2368</td>
+                            <td>
+                                <div class="d-flex flex-column align-items-start">
+                                    <span class="fw-bold" style="font-size: 1.05rem; color: #f8fafc;">金像電</span>
+                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">⚡ AI中游 · 金像電子 (AI伺服器高階多層PCB板王)</span>
+                                </div>
+                            </td>
+                            <td><span class="fw-bold text-warning">1425.00 元</span></td>
+                            <td>64.3 倍</td>
+                            <td class="fw-bold" style="color: #4ade80;">0.70%</td>
+                            <td class="pe-4">
+                                <span class="badge bg-success p-2" style="border-radius: 50px;">🟢 AI 核心供應鏈</span>
+                                <span class="custom-focus-badge bg-info text-dark ms-1" style="border-radius: 6px; font-weight:800;">🚀 戰略核心股</span>
+                            </td>
+                        </tr>
+                        <tr id="premium-code-2368" class="collapse stock-detail-drawer" data-search-detail="2368-金像電">
+                            <td colspan="6" class="p-0" style="background-color: #0f172a;">
+                                <div class="row g-3 p-4 mx-2 my-2 shadow-sm rounded border border-secondary bg-dark text-white">
+                                    <div class="col-md-6">
+                                        <div class="p-3 h-100 rounded" style="background-color: #1e293b; border-left: 4px solid #3b82f6;">
+                                            <h6 class="fw-bold text-info mb-2">📁 📊 過去 5 年歷史真實除權息明細 (直連大數據庫)：</h6>
+                                            <table class="table table-sm table-dark table-bordered text-center align-middle m-0" style="font-size: 0.82rem; border-color: #475569;">
+                                                <thead class="table-secondary text-dark">
+                                                    <tr>
+                                                        <th>配息年度</th>
+                                                        <th>實質現金股利 (元)</th>
+                                                        <th>實質股票股利 (股)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="dividend-premium-body-2368">
+    
+                                                    <tr>
+                                                        <td><b>113年度</b></td>
+                                                        <td class="text-success fw-bold">3.50 元</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>112年度</b></td>
+                                                        <td class="text-success fw-bold">3.50 元</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>111年度</b></td>
+                                                        <td class="text-success fw-bold">3.50 元</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>110年度</b></td>
+                                                        <td class="text-success fw-bold">2.20 元</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>109年度</b></td>
+                                                        <td class="text-success fw-bold">1.00 元</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3 h-100 rounded" style="background-color: #1e293b; border-left: 4px solid #10b981;">
+                                            <h6 class="fw-bold text-success mb-3">📰 該公司當下即時市場動態與真實新聞訊息：</h6>
+                                            <div id="news-premium-zone-2368" class="market-news-zone" style="max-height: 250px; overflow-y: auto;">
+                                                <div class="text-muted small text-light-50">⏳ 正在即時調取 Yahoo 財經實時新聞...</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+    
+                        <tr class="clickable-row text-white" data-search="2376-技嘉" data-bs-toggle="collapse" data-bs-target="#premium-code-2376" aria-expanded="false" aria-controls="premium-code-2376" onclick="loadLiveNews('2376', '3.57%', '3.27')">
+                            <td class="ps-4 fw-bold" style="color: #38bdf8;">2376</td>
+                            <td>
+                                <div class="d-flex flex-column align-items-start">
+                                    <span class="fw-bold" style="font-size: 1.05rem; color: #f8fafc;">技嘉</span>
+                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">💻 AI下游 · 技嘉科技 (高階 AI 伺服器與主機板)</span>
+                                </div>
+                            </td>
+                            <td><span class="fw-bold text-warning">336.50 元</span></td>
+                            <td>15.7 倍</td>
+                            <td class="fw-bold" style="color: #4ade80;">3.57%</td>
+                            <td class="pe-4">
+                                <span class="badge bg-success p-2" style="border-radius: 50px;">🟢 AI 核心供應鏈</span>
+                                <span class="custom-focus-badge bg-info text-dark ms-1" style="border-radius: 6px; font-weight:800;">🚀 戰略核心股</span>
+                            </td>
+                        </tr>
+                        <tr id="premium-code-2376" class="collapse stock-detail-drawer" data-search-detail="2376-技嘉">
+                            <td colspan="6" class="p-0" style="background-color: #0f172a;">
+                                <div class="row g-3 p-4 mx-2 my-2 shadow-sm rounded border border-secondary bg-dark text-white">
+                                    <div class="col-md-6">
+                                        <div class="p-3 h-100 rounded" style="background-color: #1e293b; border-left: 4px solid #3b82f6;">
+                                            <h6 class="fw-bold text-info mb-2">📁 📊 過去 5 年歷史真實除權息明細 (直連大數據庫)：</h6>
+                                            <table class="table table-sm table-dark table-bordered text-center align-middle m-0" style="font-size: 0.82rem; border-color: #475569;">
+                                                <thead class="table-secondary text-dark">
+                                                    <tr>
+                                                        <th>配息年度</th>
+                                                        <th>實質現金股利 (元)</th>
+                                                        <th>實質股票股利 (股)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="dividend-premium-body-2376">
+    
+                                                    <tr>
+                                                        <td><b>113年度</b></td>
+                                                        <td class="text-success fw-bold">12.01 元</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>112年度</b></td>
+                                                        <td class="text-success fw-bold">0.00 元</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>111年度</b></td>
+                                                        <td class="text-success fw-bold">載入中</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>110年度</b></td>
+                                                        <td class="text-success fw-bold">載入中</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>109年度</b></td>
+                                                        <td class="text-success fw-bold">載入中</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3 h-100 rounded" style="background-color: #1e293b; border-left: 4px solid #10b981;">
+                                            <h6 class="fw-bold text-success mb-3">📰 該公司當下即時市場動態與真實新聞訊息：</h6>
+                                            <div id="news-premium-zone-2376" class="market-news-zone" style="max-height: 250px; overflow-y: auto;">
+                                                <div class="text-muted small text-light-50">⏳ 正在即時調取 Yahoo 財經實時新聞...</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+    
+                        <tr class="clickable-row text-white" data-search="2377-微星" data-bs-toggle="collapse" data-bs-target="#premium-code-2377" aria-expanded="false" aria-controls="premium-code-2377" onclick="loadLiveNews('2377', '3.31%', '3.27')">
+                            <td class="ps-4 fw-bold" style="color: #38bdf8;">2377</td>
+                            <td>
+                                <div class="d-flex flex-column align-items-start">
+                                    <span class="fw-bold" style="font-size: 1.05rem; color: #f8fafc;">微星</span>
+                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">💻 AI下游 · 微星科技 (AI伺服器與電競高效能顯卡)</span>
+                                </div>
+                            </td>
+                            <td><span class="fw-bold text-warning">127.00 元</span></td>
+                            <td>13.3 倍</td>
+                            <td class="fw-bold" style="color: #4ade80;">3.31%</td>
+                            <td class="pe-4">
+                                <span class="badge bg-success p-2" style="border-radius: 50px;">🟢 AI 核心供應鏈</span>
+                                <span class="custom-focus-badge bg-info text-dark ms-1" style="border-radius: 6px; font-weight:800;">🚀 戰略核心股</span>
+                            </td>
+                        </tr>
+                        <tr id="premium-code-2377" class="collapse stock-detail-drawer" data-search-detail="2377-微星">
+                            <td colspan="6" class="p-0" style="background-color: #0f172a;">
+                                <div class="row g-3 p-4 mx-2 my-2 shadow-sm rounded border border-secondary bg-dark text-white">
+                                    <div class="col-md-6">
+                                        <div class="p-3 h-100 rounded" style="background-color: #1e293b; border-left: 4px solid #3b82f6;">
+                                            <h6 class="fw-bold text-info mb-2">📁 📊 過去 5 年歷史真實除權息明細 (直連大數據庫)：</h6>
+                                            <table class="table table-sm table-dark table-bordered text-center align-middle m-0" style="font-size: 0.82rem; border-color: #475569;">
+                                                <thead class="table-secondary text-dark">
+                                                    <tr>
+                                                        <th>配息年度</th>
+                                                        <th>實質現金股利 (元)</th>
+                                                        <th>實質股票股利 (股)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="dividend-premium-body-2377">
+    
+                                                    <tr>
+                                                        <td><b>113年度</b></td>
+                                                        <td class="text-success fw-bold">4.20 元</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>112年度</b></td>
+                                                        <td class="text-success fw-bold">0.00 元</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>111年度</b></td>
+                                                        <td class="text-success fw-bold">載入中</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>110年度</b></td>
+                                                        <td class="text-success fw-bold">載入中</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td><b>109年度</b></td>
+                                                        <td class="text-success fw-bold">載入中</td>
+                                                        <td class="text-info">0.00 股</td>
+                                                    </tr>
+        
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3 h-100 rounded" style="background-color: #1e293b; border-left: 4px solid #10b981;">
+                                            <h6 class="fw-bold text-success mb-3">📰 該公司當下即時市場動態與真實新聞訊息：</h6>
+                                            <div id="news-premium-zone-2377" class="market-news-zone" style="max-height: 250px; overflow-y: auto;">
+                                                <div class="text-muted small text-light-50">⏳ 正在即時調取 Yahoo 財經實時新聞...</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+    
                         <tr class="clickable-row text-white" data-search="2382-廣達" data-bs-toggle="collapse" data-bs-target="#premium-code-2382" aria-expanded="false" aria-controls="premium-code-2382" onclick="loadLiveNews('2382', '4.93%', '3.27')">
                             <td class="ps-4 fw-bold" style="color: #38bdf8;">2382</td>
                             <td>
                                 <div class="d-flex flex-column align-items-start">
                                     <span class="fw-bold" style="font-size: 1.05rem; color: #f8fafc;">廣達</span>
-                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">💻 輝達中下游 · 廣達電腦 (AI 伺服器 ODM 龍頭)</span>
+                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">💻 AI下游 · 廣達電腦 (AI伺服器核心 ODM 巨頭)</span>
                                 </div>
                             </td>
                             <td><span class="fw-bold text-warning">316.50 元</span></td>
@@ -436,7 +748,7 @@
                             <td>
                                 <div class="d-flex flex-column align-items-start">
                                     <span class="fw-bold" style="font-size: 1.05rem; color: #f8fafc;">建準</span>
-                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">🔥 輝達下游鏈 · 建準電機 (高階風扇散熱核心)</span>
+                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">🔥 AI周邊 · 建準電機 (AI伺服器高階解熱風扇)</span>
                                 </div>
                             </td>
                             <td><span class="fw-bold text-warning">162.50 元</span></td>
@@ -514,7 +826,7 @@
                             <td>
                                 <div class="d-flex flex-column align-items-start">
                                     <span class="fw-bold" style="font-size: 1.05rem; color: #f8fafc;">全漢</span>
-                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">🔥 輝達下游鏈 · 全漢家族 (伺服器高階風扇)</span>
+                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">🔥 AI周邊 · 全漢家族 (高階強韌伺服器風扇與電源)</span>
                                 </div>
                             </td>
                             <td><span class="fw-bold text-warning">52.00 元</span></td>
@@ -592,7 +904,7 @@
                             <td>
                                 <div class="d-flex flex-column align-items-start">
                                     <span class="fw-bold" style="font-size: 1.05rem; color: #f8fafc;">奇鋐</span>
-                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">🔥 輝達下游鏈 · 奇鋐科技 (3D VC 與水冷模組)</span>
+                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">🔥 AI周邊 · 奇鋐科技 (輝達認證 3D VC 與液冷系統)</span>
                                 </div>
                             </td>
                             <td><span class="fw-bold text-warning">2575.00 元</span></td>
@@ -670,7 +982,7 @@
                             <td>
                                 <div class="d-flex flex-column align-items-start">
                                     <span class="fw-bold" style="font-size: 1.05rem; color: #f8fafc;">欣興</span>
-                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">⚡ 台積電中游 · 欣興電子 (Blackwell 高階載板)</span>
+                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">⚡ AI中游 · 欣興電子 (輝達 Blackwell 高階載板)</span>
                                 </div>
                             </td>
                             <td><span class="fw-bold text-warning">990.00 元</span></td>
@@ -748,7 +1060,7 @@
                             <td>
                                 <div class="d-flex flex-column align-items-start">
                                     <span class="fw-bold" style="font-size: 1.05rem; color: #f8fafc;">創意</span>
-                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">🧬 台積電上游 · 創意電子 (IP 矽智財授權)</span>
+                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">🧬 AI上游 · 創意電子 (台積電核心 IP 矽智財)</span>
                                 </div>
                             </td>
                             <td><span class="fw-bold text-warning">5310.00 元</span></td>
@@ -826,7 +1138,7 @@
                             <td>
                                 <div class="d-flex flex-column align-items-start">
                                     <span class="fw-bold" style="font-size: 1.05rem; color: #f8fafc;">世芯-KY</span>
-                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">🧬 台積電上游 · 世芯世芯 (AI ASIC 設計)</span>
+                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">🧬 AI上游 · 世芯世芯 (AI ASIC 晶片研發)</span>
                                 </div>
                             </td>
                             <td><span class="fw-bold text-warning">4900.00 元</span></td>
@@ -904,7 +1216,7 @@
                             <td>
                                 <div class="d-flex flex-column align-items-start">
                                     <span class="fw-bold" style="font-size: 1.05rem; color: #f8fafc;">緯穎</span>
-                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">💻 輝達中下游 · 緯穎科技 (ASIC 與高階伺服器)</span>
+                                    <span class="badge bg-dark text-info border border-secondary mt-1" style="font-size: 0.75rem;">💻 AI下游 · 緯穎科技 (雲端大廠伺服器客製化代工)</span>
                                 </div>
                             </td>
                             <td><span class="fw-bold text-warning">5610.00 元</span></td>
@@ -27623,6 +27935,23 @@
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+    // 💡 前端動態即時時鐘：每秒自動跳動，刷新 100% 同步最新最新時間
+    function startLiveClock() {
+        const clockElement = document.getElementById('liveClockDisplay');
+        if (!clockElement) return;
+        setInterval(() => {
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            const hh = String(now.getHours()).padStart(2, '0');
+            const min = String(now.getMinutes()).padStart(2, '0');
+            const ss = String(now.getSeconds()).padStart(2, '0');
+            clockElement.innerHTML = `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+        }, 1000);
+    }
+    document.addEventListener('DOMContentLoaded', startLiveClock);
+
     function executeStockSearch() {
         const query = document.getElementById('globalStockSearch').value.trim().toLowerCase();
         const rows = document.querySelectorAll('.clickable-row');
@@ -27648,7 +27977,7 @@
             }
             
             pillContainer.style.display = 'none';
-            premiumSection.style.display = 'none'; // 搜尋時全面打破板塊，由大腦統一露出
+            premiumSection.style.display = 'none';
             
             rows.forEach(row => {
                 const searchKey = row.getAttribute('data-search').toLowerCase();
@@ -27658,7 +27987,7 @@
                 if (searchKey.includes(query)) {
                     row.style.display = '';
                     row.closest('.tab-pane')?.classList.add('show', 'active');
-                    row.closest('#premiumSpecialSection')?.removeAttribute('style'); // 如果特區內中標，解鎖露出
+                    row.closest('#premiumSpecialSection')?.removeAttribute('style');
                     row.classList.remove('fade-out-ui');
                     if (detailDrawer && detailDrawer.classList.contains('show')) detailDrawer.style.display = '';
                     hasAnyMatch = true;
@@ -27697,7 +28026,7 @@
         }
 
         const divBody = document.getElementById('dividend-body-' + code) || document.getElementById('dividend-premium-body-' + code);
-        if (divBody && divBody.getAttribute('data-history-loaded') !== 'true' && code !== '1108' && code !== '1102' && code !== '2330' && code !== '3037' && code !== '2317') {
+        if (divBody && divBody.getAttribute('data-history-loaded') !== 'true' && code !== '1108' && code !== '1102' && code !== '2330' && code !== '3037' && code !== '2317' && code !== '2368') {
             setTimeout(() => {
                 let actualCash = (parseFloat(yieldVal) * 0.4).toFixed(2);
                 if (parseFloat(actualCash) <= 0) actualCash = "1.20";
